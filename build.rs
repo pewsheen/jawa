@@ -10,5 +10,6 @@ fn main() {
         .qt_module("WebEngineWidgets")
         .file("src/qpushbutton.rs")
         .file("src/qwebengineview.rs")
+        .file("src/qwidget.rs")
         .build();
 }

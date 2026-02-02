@@ -1,7 +1,10 @@
+use std::pin::Pin;
+
 use cxx_qt_lib::QUrl;
 use cxx_qt_lib_extras::QApplication;
+use cxx_qt::casting::Upcast;
 
-use jawa::QWebEngineView;
+use jawa::{QWebEngineView, QWidget};
 
 fn main() {
     // Create the application and engine
@@ -12,7 +15,9 @@ fn main() {
     if let Some(mut view) = view.as_mut() {
         view.as_mut()
             .load(&QUrl::from("https://html5test.teamdev.com"));
-        view.as_mut().show();
+        let mut widget: Pin<&mut QWidget> = view.as_mut().upcast_pin();
+        widget.as_mut().resize(800, 600);
+        widget.as_mut().show();
     }
 
     // Start the app

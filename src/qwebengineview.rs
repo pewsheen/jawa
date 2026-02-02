@@ -10,13 +10,21 @@ mod ffi {
 
     unsafe extern "C++Qt" {
         include!(<QWebEngineView>);
+        type QWidget = crate::QWidget;
 
+        /// Widget used to display and interact with web content.
+        ///
+        /// Wraps Qt's QWebEngineView, a widget for rendering web pages using
+        /// the Qt WebEngine backend.
         #[qobject]
+        #[base = QWidget]
         type QWebEngineView;
 
+        /// Loads the given URL into the view.
         fn load(self: Pin<&mut QWebEngineView>, text: &QUrl);
 
-        fn show(self: Pin<&mut QWebEngineView>);
+        /// Returns the currently loaded URL.
+        fn url(self: &QWebEngineView) -> QUrl;
     }
 
     #[namespace = "rust::cxxqtlib1"]
@@ -30,6 +38,7 @@ mod ffi {
 }
 
 impl QWebEngineView {
+    /// Creates a new web engine view widget.
     pub fn new() -> WidgetPtr<Self> {
         ffi::new_web_engine_view().into()
     }
