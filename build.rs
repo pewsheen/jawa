@@ -8,6 +8,7 @@ fn main() {
         .qt_module("Network")
         .qt_module("Widgets")
         .qt_module("WebEngineWidgets")
+        .file("src/qmainwindow.rs")
         .file("src/qpushbutton.rs")
         .file("src/qwebengineview.rs")
         .file("src/qwidget.rs")

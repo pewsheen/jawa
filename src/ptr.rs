@@ -2,8 +2,10 @@ use std::{
     cmp::Ordering,
     fmt::{self, Display},
     hash::{Hash, Hasher},
+    mem,
     ops::{Deref, DerefMut},
     pin::Pin,
+    ptr,
 };
 
 use cxx::{UniquePtr, memory::UniquePtrTarget};
@@ -26,6 +28,10 @@ where
     /// Checks whether the WidgetPtr does not own an object.
     pub fn is_null(&self) -> bool {
         self.as_ptr().is_null()
+    }
+
+    pub fn is_unique(&self) -> bool {
+        matches!(self, WidgetPtr::Unique(_))
     }
 
     /// Returns a reference to the object owned by this WidgetPtr if any,
@@ -76,11 +82,15 @@ where
         self.as_ptr().cast_mut()
     }
 
-    /// Consumes the WidgetPtr, releasing its ownership of the heap-allocated T.
-    pub fn into_raw(self) -> *mut T {
-        match self {
-            WidgetPtr::Unique(ptr) => ptr.into_raw(),
-            WidgetPtr::Raw(ptr) => ptr,
+    /// Releases ownership of the WidgetPtr, making it a raw pointer. Use this whenever the widget
+    /// is added to a parent, so that the ownership is properly transferred.
+    pub fn cast_raw(&mut self) {
+        if self.is_unique() {
+            let raw_ptr = match mem::replace(self, WidgetPtr::Raw(ptr::null_mut())) {
+                WidgetPtr::Unique(unique_ptr) => unique_ptr.into_raw(),
+                WidgetPtr::Raw(_) => unreachable!(),
+            };
+            *self = WidgetPtr::Raw(raw_ptr);
         }
     }
 }
