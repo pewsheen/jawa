@@ -1,10 +1,8 @@
 use std::pin::Pin;
 
-use qtwidgets::casting::Upcast;
-use qtwidgets::QUrl;
-use qtwidgets::QApplication;
-
-use qtwidgets::{PermissionType, QMainWindow, QWebEngineView, QWidget};
+use qtwidgets::{
+    PermissionType, QApplication, QFlag, QMainWindow, QMessageBox, QUrl, QWebEngineView, QWidget, StandardButton, StandardButtons, casting::Upcast
+};
 
 fn main() {
     let mut app = QApplication::new();
@@ -15,18 +13,36 @@ fn main() {
 
     window.pin_mut().set_central_widget(&mut view);
     let mut page = view.page();
-    let connection = page.pin_mut().on_permission_requested(|page, permission| {
+    let _connection = page.pin_mut().on_permission_requested(|_page, permission| {
         if permission.permission_type() != PermissionType::Geolocation {
             println!("Unsupported permission type requested: {:?}", permission);
             return;
         }
-        // TODO: message box
-        println!(
-            "Permission requested from origin: {}",
-            permission.origin().to_string()
+
+        let mut message_box = QMessageBox::new();
+        message_box
+            .pin_mut()
+            .set_text(&format!("{} wants to know your location", permission.origin().host_or_default()).into());
+        message_box.pin_mut().set_informative_text(
+            &"Do you want to send your current location to this website?".into(),
         );
-        permission.grant();
-        println!("Permission granted.");
+
+        message_box
+            .pin_mut()
+            .set_standard_buttons(StandardButtons::from(
+                StandardButton::Yes | StandardButton::No,
+            ));
+        message_box
+            .pin_mut()
+            .set_default_button(StandardButton::Yes);
+
+        if message_box.pin_mut().exec() == StandardButton::Yes.to_repr() as i32 {
+            println!("User granted permission.");
+            permission.grant();
+        } else {
+            println!("User denied permission.");
+            permission.deny();
+        }
     });
     view.pin_mut()
         // .load(&QUrl::from("https://html5test.teamdev.com"));

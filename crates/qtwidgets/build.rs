@@ -32,6 +32,7 @@ fn main() {
 
     let rust_bridges = vec![
         "qmainwindow",
+        "qmessagebox",
         "qpushbutton",
         "qwebenginepage",
         "qwebenginepermission",

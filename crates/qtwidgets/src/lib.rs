@@ -1,5 +1,6 @@
 mod ptr;
 mod qmainwindow;
+mod qmessagebox;
 mod qpushbutton;
 mod qwebenginepage;
 mod qwebenginepermission;
@@ -12,6 +13,7 @@ pub use cxx_qt_lib_extras::*;
 
 pub use ptr::WidgetPtr;
 pub use qmainwindow::QMainWindow;
+pub use qmessagebox::{QMessageBox, StandardButton, StandardButtons};
 pub use qpushbutton::QPushButton;
 pub use qwebenginepage::QWebEnginePage;
 pub use qwebenginepermission::{PermissionType, QWebEnginePermission, State};
