@@ -6,14 +6,10 @@ pub use ffi::{QMessageBox, StandardButton};
 
 #[cxx_qt::bridge]
 mod ffi {
-    unsafe extern "C++" {
-        include!("cxx-qt-lib/qstring.h");
-        type QString = cxx_qt_lib::QString;
-    }
-
     unsafe extern "C++Qt" {
         include!("qtwidgets/qmessagebox.h");
         type QWidget = crate::QWidget;
+        type QString = cxx_qt_lib::QString;
 
         /// Message box dialog for displaying information to the user.
         #[qobject]
@@ -56,7 +52,7 @@ mod ffi {
     /// Represents the state of a permission request.
     #[repr(u32)]
     #[derive(Debug)]
-    #[namespace = "rust::cxxqtlib1"]
+    // #[namespace = "rust::cxxqtlib1"]
     enum StandardButton {
         // keep this in sync with QDialogButtonBox::StandardButton and QPlatformDialogHelper::StandardButton
         NoButton = 0x00000000,
@@ -80,7 +76,6 @@ mod ffi {
         RestoreDefaults = 0x08000000,
     }
 
-    #[namespace = "rust::cxxqtlib1"]
     unsafe extern "C++" {
         type StandardButtons = super::StandardButtons;
         type StandardButton;
@@ -111,4 +106,4 @@ impl ffi::QMessageBox {
 /// [`QFlags`] of [`StandardButton`].
 pub type StandardButtons = QFlags<StandardButton>;
 
-unsafe_impl_qflag!(StandardButton, "rust::cxxqtlib1::StandardButtons", u32);
+unsafe_impl_qflag!(StandardButton, "StandardButtons", u32);

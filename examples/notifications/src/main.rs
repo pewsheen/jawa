@@ -14,10 +14,6 @@ pub mod qobject {
         include!("qtwidgets/qwebenginepage.h");
         /// Base for Qt type
         type QWebEnginePage = qtwidgets::QWebEnginePage;
-    }
-
-    #[namespace = "rust::cxxqtlib1"]
-    unsafe extern "C++" {
         type NavigationType = qtwidgets::NavigationType;
     }
     

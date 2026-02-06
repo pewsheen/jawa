@@ -1,16 +1,11 @@
 #pragma once
 
 #include <QMessageBox>
-#include <QWidget>
-#include <QString>
 
 #include "rust/cxx.h"
+#include "cxx-qt-lib/qstring.h"
 
-namespace rust {
-namespace cxxqtlib1 {
 
 using StandardButtons = QMessageBox::StandardButtons;
 using StandardButton = QMessageBox::StandardButton;
 
-} // namespace cxxqtlib1
-} // namespace rust

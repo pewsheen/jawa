@@ -1,7 +1,7 @@
 use cxx_qt_build::CxxQtBuilder;
 
 fn main() {
-    let mut builder = CxxQtBuilder::new()
+    let _ = CxxQtBuilder::new()
         .qt_module("Widgets")
         .qt_module("WebEngineCore")
         .qrc("data/data.qrc")

@@ -6,12 +6,12 @@ pub use ffi::{PermissionType, State};
 #[cxx_qt::bridge]
 mod ffi {
     unsafe extern "C++" {
-        include!("cxx-qt-lib/qurl.h");
-        type QUrl = cxx_qt_lib::QUrl;
-
         include!("qtwidgets/qwebenginepermission.h");
         /// Represents a permission request for web content.
         type QWebEnginePermission = super::QWebEnginePermission;
+        type QUrl = cxx_qt_lib::QUrl;
+        type PermissionType;
+        type State;
 
         /// Returns whether this permission object is valid.
         #[cxx_name = "isValid"]
@@ -28,11 +28,17 @@ mod ffi {
 
         /// Resets the permission decision.
         fn reset(self: &QWebEnginePermission);
+
+        /// Returns the type of permission being requested.
+        #[cxx_name = "permissionType"]
+        fn permission_type(self: &QWebEnginePermission) -> PermissionType;
+
+        /// Returns the state of the permission request.
+        fn state(self: &QWebEnginePermission) -> State;
     }
 
     /// Represents the type of permission being requested.
     #[repr(u8)]
-    #[namespace = "rust::cxxqtlib1"]
     #[derive(Debug)]
     enum PermissionType {
         Unsupported,
@@ -50,25 +56,12 @@ mod ffi {
 
     /// Represents the state of a permission request.
     #[repr(u8)]
-    #[namespace = "rust::cxxqtlib1"]
     #[derive(Debug)]
     enum State {
         Invalid,
         Ask,
         Granted,
         Denied,
-    }
-
-    #[namespace = "rust::cxxqtlib1"]
-    unsafe extern "C++" {
-        type PermissionType;
-        type State;
-
-        #[cxx_name = "permissionType"]
-        fn permission_type(self: &QWebEnginePermission) -> PermissionType;
-
-        fn state(self: &QWebEnginePermission) -> State;
-
     }
 }
 

@@ -3,17 +3,12 @@ pub use ffi::{QWebEnginePage, NavigationType};
 
 #[cxx_qt::bridge]
 mod ffi {
-    unsafe extern "C++" {
-        include!("cxx-qt-lib/qstring.h");
-        type QString = cxx_qt_lib::QString;
-
-        include!("cxx-qt-lib/qurl.h");
-        type QUrl = cxx_qt_lib::QUrl;
-    }
-
     unsafe extern "C++Qt" {
         include!("qtwidgets/qwebenginepermission.h");
         type QWebEnginePermission = crate::QWebEnginePermission;
+        type QString = cxx_qt_lib::QString;
+        type QUrl = cxx_qt_lib::QUrl;
+
 
         include!("qtwidgets/qwebenginepage.h");
         /// Represents the contents of a web page without a visual widget.
@@ -48,7 +43,6 @@ mod ffi {
     }
 
     #[repr(u32)]
-    #[namespace = "rust::cxxqtlib1"]
     #[derive(Debug)]
     enum NavigationType {
         NavigationTypeLinkClicked,
@@ -60,7 +54,6 @@ mod ffi {
         NavigationTypeRedirect,
     }
 
-    #[namespace = "rust::cxxqtlib1"]
     unsafe extern "C++" {
         type NavigationType;
     }
