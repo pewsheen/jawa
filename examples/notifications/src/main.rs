@@ -1,8 +1,9 @@
 use std::pin::Pin;
 
 use qtwidgets::{
-    QApplication, QUrl, QWebEnginePage, QWebEngineView, QWidget, WidgetPtr, casting::Upcast
+    QApplication, QDesktopServices, QUrl, QWebEnginePage, QWebEngineView, QWidget, WidgetPtr, casting::Upcast
 };
+use cxx_qt_lib::QString;
 
 #[cxx_qt::bridge]
 pub mod qobject {
@@ -50,14 +51,13 @@ impl qobject::WebEnginePage {
         self: Pin<&mut Self>,
         url: &qobject::QUrl,
         _type: qobject::NavigationType,
-        is_main_frame: bool,
+        _is_main_frame: bool,
     ) -> bool {
-        println!(
-            "Navigation request to URL: {}, is_main_frame: {}",
-            url.to_string(),
-            is_main_frame
-        );
-        true
+        if url.scheme() != Some(QString::from("https")) {
+            return true;
+        }
+        QDesktopServices::open_url(url);
+        false
     }
 }
 
@@ -71,7 +71,8 @@ fn main() {
         view.pin_mut().set_page(page.as_mut().get_unchecked_mut());
     }
     view.pin_mut()
-        .load(&QUrl::from("qrc:/index.html"));
+        // .load(&QUrl::from("qrc:/index.html"));
+        .load(&QUrl::from("https://www.rust-lang.org"));
 
     let mut widget: Pin<&mut QWidget> = view.pin_mut().upcast_pin();
     widget.as_mut().resize(800, 600);
