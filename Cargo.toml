@@ -5,6 +5,7 @@ members = [
 
     # Examples
 	"examples/maps",
+    "examples/notifications",
 ]
 resolver = "2"
 

@@ -1,5 +1,5 @@
 use crate::WidgetPtr;
-pub use ffi::QWebEnginePage;
+pub use ffi::{QWebEnginePage, NavigationType};
 
 #[cxx_qt::bridge]
 mod ffi {
@@ -15,7 +15,7 @@ mod ffi {
         include!("qtwidgets/qwebenginepermission.h");
         type QWebEnginePermission = crate::QWebEnginePermission;
 
-        include!(<QWebEnginePage>);
+        include!("qtwidgets/qwebenginepage.h");
         /// Represents the contents of a web page without a visual widget.
         #[qobject]
         type QWebEnginePage;
@@ -45,6 +45,24 @@ mod ffi {
         #[doc(hidden)]
         #[cxx_name = "make_unique"]
         fn new_web_engine_page() -> UniquePtr<QWebEnginePage>;
+    }
+
+    #[repr(u32)]
+    #[namespace = "rust::cxxqtlib1"]
+    #[derive(Debug)]
+    enum NavigationType {
+        NavigationTypeLinkClicked,
+        NavigationTypeTyped,
+        NavigationTypeFormSubmitted,
+        NavigationTypeBackForward,
+        NavigationTypeReload,
+        NavigationTypeOther,
+        NavigationTypeRedirect,
+    }
+
+    #[namespace = "rust::cxxqtlib1"]
+    unsafe extern "C++" {
+        type NavigationType;
     }
 }
 

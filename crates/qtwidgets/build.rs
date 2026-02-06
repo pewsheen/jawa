@@ -55,7 +55,7 @@ fn main() {
 
     println!("cargo::rerun-if-changed=src/assertion_utils.h");
 
-    let _interface = builder
+    let interface = builder
         // Use a short name due to the Windows file path limit!
         // We don't re-export these headers anyway.
         .include_prefix("private")
@@ -63,5 +63,5 @@ fn main() {
         .build();
 
     // Disable exporting the standard include directory, as we are exporting custom header
-    // interface.reexport_dependency("cxx-qt-lib").export();
+    interface.reexport_dependency("cxx-qt-lib").export();
 }

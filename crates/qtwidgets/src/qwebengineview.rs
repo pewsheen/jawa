@@ -30,6 +30,10 @@ mod ffi {
         /// Returns the currently loaded URL.
         fn url(self: &QWebEngineView) -> QUrl;
 
+        /// Sets the page object to be used by this view.
+        #[cxx_name = "setPage"]
+        unsafe fn set_page(self: Pin<&mut QWebEngineView>, page: *mut QWebEnginePage);
+
         /// Returns the associated page object.
         #[cxx_name = "page"]
         fn page_raw(self: &QWebEngineView) -> *mut QWebEnginePage;

@@ -1,0 +1,85 @@
+use std::pin::Pin;
+
+use qtwidgets::{
+    QApplication, QUrl, QWebEnginePage, QWebEngineView, QWidget, WidgetPtr, casting::Upcast
+};
+
+#[cxx_qt::bridge]
+pub mod qobject {
+    // Define the API from QtQuick that we need
+    unsafe extern "C++" {
+        include!("cxx-qt-lib/qurl.h");
+        type QUrl = cxx_qt_lib::QUrl;
+ 
+        include!("qtwidgets/qwebenginepage.h");
+        /// Base for Qt type
+        type QWebEnginePage = qtwidgets::QWebEnginePage;
+    }
+
+    #[namespace = "rust::cxxqtlib1"]
+    unsafe extern "C++" {
+        type NavigationType = qtwidgets::NavigationType;
+    }
+    
+    unsafe extern "RustQt" {
+        #[qobject]
+        #[base = QWebEnginePage]
+        type WebEnginePage = super::WebEnginePageRust;
+
+        #[cxx_override]
+        #[cxx_name = "acceptNavigationRequest"]
+        fn accept_navigation_request(self: Pin<&mut Self>, url: &QUrl, _type: NavigationType, is_main_frame: bool) -> bool;
+    }
+
+    #[namespace = "rust::cxxqtlib1"]
+    unsafe extern "C++Qt" {
+        include!("cxx-qt-lib/common.h");
+
+        #[doc(hidden)]
+        #[cxx_name = "make_unique"]
+        fn new_web_engine_page() -> UniquePtr<WebEnginePage>;
+    }
+}
+
+#[derive(Default)]
+pub struct WebEnginePageRust;
+
+impl qobject::WebEnginePage {
+    /// Creates a new web engine page.
+    pub fn new() -> WidgetPtr<Self> {
+        qobject::new_web_engine_page().into()
+    }
+
+    pub fn accept_navigation_request(
+        self: Pin<&mut Self>,
+        url: &qobject::QUrl,
+        _type: qobject::NavigationType,
+        is_main_frame: bool,
+    ) -> bool {
+        println!(
+            "Navigation request to URL: {}, is_main_frame: {}",
+            url.to_string(),
+            is_main_frame
+        );
+        true
+    }
+}
+
+fn main() {
+    let mut app = QApplication::new();
+
+    let mut view = QWebEngineView::new();;
+    let mut page = qobject::WebEnginePage::new();
+    let mut page: Pin<&mut QWebEnginePage> = page.pin_mut().upcast_pin();
+    unsafe {
+        view.pin_mut().set_page(page.as_mut().get_unchecked_mut());
+    }
+    view.pin_mut()
+        .load(&QUrl::from("qrc:/index.html"));
+
+    let mut widget: Pin<&mut QWidget> = view.pin_mut().upcast_pin();
+    widget.as_mut().resize(800, 600);
+    widget.as_mut().show();
+
+    app.pin_mut().exec();
+}

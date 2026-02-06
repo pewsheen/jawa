@@ -15,7 +15,7 @@ pub use ptr::WidgetPtr;
 pub use qmainwindow::QMainWindow;
 pub use qmessagebox::{QMessageBox, StandardButton, StandardButtons};
 pub use qpushbutton::QPushButton;
-pub use qwebenginepage::QWebEnginePage;
+pub use qwebenginepage::{QWebEnginePage, NavigationType};
 pub use qwebenginepermission::{PermissionType, QWebEnginePermission, State};
 pub use qwebengineview::QWebEngineView;
 pub use qwidget::QWidget;
