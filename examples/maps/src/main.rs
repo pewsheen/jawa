@@ -1,7 +1,7 @@
 use std::pin::Pin;
 
 use cxx_qt_widgets::{
-    PermissionType, QApplication, QFlag, QMainWindow, QMessageBox, QUrl, QWebEngineView, QWidget, StandardButton, StandardButtons, WindowFlags, WindowType, casting::Upcast
+    PermissionType, QApplication, QFlag, QMainWindow, QMessageBox, QUrl, QWebEngineView, QWidget, StandardButton, StandardButtons, casting::Upcast
 };
 
 fn main() {

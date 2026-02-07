@@ -7,5 +7,6 @@ fn main() {
         .qrc("data/data.qrc")
         .qrc_resources(["data/index.html"])
         .file("src/main.rs")
+        .file("src/notification_popup.rs")
         .build();
 }

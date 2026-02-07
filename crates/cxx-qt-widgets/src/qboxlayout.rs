@@ -1,6 +1,6 @@
 use std::pin::Pin;
 
-use crate::{Alignment, QWidget, WidgetPtr};
+use crate::{Alignment, QLayout, QWidget, WidgetPtr};
 use cxx::memory::UniquePtrTarget;
 use cxx_qt::casting::Upcast;
 
@@ -20,6 +20,7 @@ mod ffi {
 
         /// Box layout for arranging child widgets in a single row or column.
         #[qobject]
+        #[base = QLayout]
         type QBoxLayout;
 
         /// Adds a widget to the layout.
@@ -111,19 +112,19 @@ impl ffi::QBoxLayout {
     }
 
     /// Adds a layout to this layout, transferring ownership to the parent layout.
-    pub fn add_layout(self: Pin<&mut QBoxLayout>, layout: &mut WidgetPtr<crate::QLayout>) {
+    pub fn add_layout<T: Upcast<QLayout> + UniquePtrTarget>(self: Pin<&mut QBoxLayout>, layout: &mut WidgetPtr<T>) {
         self.add_layout_with_stretch(layout, 0);
     }
 
     /// Adds a layout with the given stretch factor.
-    pub fn add_layout_with_stretch(
+    pub fn add_layout_with_stretch<T: Upcast<QLayout> + UniquePtrTarget>(
         self: Pin<&mut QBoxLayout>,
-        layout: &mut WidgetPtr<crate::QLayout>,
+        layout: &mut WidgetPtr<T>,
         strech: i32,
     ) {
         layout.release();
         unsafe {
-            self.add_layout_raw(layout.as_mut_ptr(), strech);
+            self.add_layout_raw((&mut *layout.as_mut_ptr()).upcast_mut(), strech);
         }
     }
 }

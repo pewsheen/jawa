@@ -2,6 +2,7 @@ use std::pin::Pin;
 
 use crate::{QWidget, WidgetPtr};
 
+use cxx_qt::{impl_transitive_cast, casting::Upcast};
 pub use ffi::QHBoxLayout;
 
 #[cxx_qt::bridge]
@@ -10,6 +11,7 @@ mod ffi {
         include!(<QtWidgets/QHBoxLayout>);
         type QWidget = crate::QWidget;
         type QBoxLayout = crate::QBoxLayout;
+        type QLayout = crate::QLayout;
 
         /// Horizontal box layout for arranging child widgets in a row.
         #[qobject]
@@ -56,3 +58,5 @@ impl ffi::QHBoxLayout {
         unsafe { ffi::new_hbox_layout_with_parent(parent.get_unchecked_mut()).into() }
     }
 }
+
+impl_transitive_cast!(ffi::QHBoxLayout, ffi::QBoxLayout, ffi::QLayout);

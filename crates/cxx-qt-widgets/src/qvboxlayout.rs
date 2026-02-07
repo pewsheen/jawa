@@ -2,6 +2,7 @@ use std::pin::Pin;
 
 use crate::{QWidget, WidgetPtr};
 
+use cxx_qt::{impl_transitive_cast, casting::Upcast};
 pub use ffi::QVBoxLayout;
 
 #[cxx_qt::bridge]
@@ -10,6 +11,7 @@ mod ffi {
         include!(<QtWidgets/QVBoxLayout>);
         type QWidget = crate::QWidget;
         type QBoxLayout = crate::QBoxLayout;
+        type QLayout = crate::QLayout;
 
         /// Vertical box layout for arranging child widgets in a column.
         #[qobject]
@@ -56,3 +58,5 @@ impl ffi::QVBoxLayout {
         unsafe { ffi::new_vbox_layout_with_parent(parent.get_unchecked_mut()).into() }
     }
 }
+
+impl_transitive_cast!(ffi::QVBoxLayout, ffi::QBoxLayout, ffi::QLayout);

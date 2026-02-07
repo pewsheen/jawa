@@ -1,9 +1,12 @@
+mod notification_popup;
+
 use std::pin::Pin;
 
 use cxx_qt_widgets::{
     PermissionType, QApplication, QDesktopServices, QUrl, QWebEnginePage, QWebEngineProfile, QWebEngineView, QWidget, WidgetPtr, casting::Upcast
 };
 use cxx_qt_lib::QString;
+use crate::notification_popup::NotificationPopup;
 
 #[cxx_qt::bridge]
 pub mod qobject {
@@ -84,6 +87,8 @@ fn main() {
         println!("Notification received: {} - {}", notification.title(), notification.message());
         notification.show();
     });
+
+    let popup = NotificationPopup::new();
 
 
     view.pin_mut()

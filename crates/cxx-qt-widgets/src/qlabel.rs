@@ -11,9 +11,11 @@ mod ffi {
 
     unsafe extern "C++Qt" {
         include!(<QtWidgets/QLabel>);
+        type QWidget = crate::QWidget;
 
         /// Display text or an image.
         #[qobject]
+        #[base = QWidget]
         type QLabel;
 
         /// Set the text shown on the label.
