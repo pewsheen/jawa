@@ -90,7 +90,7 @@ where
 
     /// Releases ownership of the WidgetPtr, making it a raw pointer. Use this whenever the widget
     /// is added to a parent, so that the ownership is properly transferred.
-    pub fn cast_raw(&mut self) {
+    pub fn release(&mut self) {
         if self.is_unique() {
             let raw_ptr = match mem::replace(self, WidgetPtr::Raw(ptr::null_mut())) {
                 WidgetPtr::Unique(unique_ptr) => unique_ptr.into_raw(),

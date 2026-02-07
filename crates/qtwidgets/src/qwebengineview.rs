@@ -32,7 +32,7 @@ mod ffi {
 
         /// Sets the page object to be used by this view.
         #[cxx_name = "setPage"]
-        unsafe fn set_page(self: Pin<&mut QWebEngineView>, page: *mut QWebEnginePage);
+        unsafe fn set_page_raw(self: Pin<&mut QWebEngineView>, page: *mut QWebEnginePage);
 
         /// Returns the associated page object.
         #[cxx_name = "page"]
@@ -69,5 +69,9 @@ impl QWebEngineView {
     /// The returned pointer is non-owning; the view manages its lifetime.
     pub fn page(&self) -> WidgetPtr<QWebEnginePage> {
         self.page_raw().into()
+    }
+
+    pub fn set_page(self: Pin<&mut QWebEngineView>, page: Pin<&mut QWebEnginePage>) {
+        unsafe { self.set_page_raw(page.get_unchecked_mut()) }
     }
 }

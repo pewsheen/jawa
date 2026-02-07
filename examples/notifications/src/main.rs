@@ -64,12 +64,10 @@ impl qobject::WebEnginePage {
 fn main() {
     let mut app = QApplication::new();
 
-    let mut view = QWebEngineView::new();;
+    let mut view = QWebEngineView::new();
     let mut page = qobject::WebEnginePage::new();
-    let mut page: Pin<&mut QWebEnginePage> = page.pin_mut().upcast_pin();
-    unsafe {
-        view.pin_mut().set_page(page.as_mut().get_unchecked_mut());
-    }
+    let page: Pin<&mut QWebEnginePage> = page.pin_mut().upcast_pin();
+    view.pin_mut().set_page(page);
     view.pin_mut()
         // .load(&QUrl::from("qrc:/index.html"));
         .load(&QUrl::from("https://www.rust-lang.org"));

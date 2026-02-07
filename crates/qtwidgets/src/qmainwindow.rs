@@ -46,7 +46,7 @@ impl ffi::QMainWindow {
         self: Pin<&mut QMainWindow>,
         widget: &mut WidgetPtr<T>,
     ) {
-        widget.cast_raw();
+        widget.release();
         unsafe {
             self.set_central_widget_raw((&mut *widget.as_mut_ptr()).upcast_mut());
         }
