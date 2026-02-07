@@ -9,6 +9,7 @@ mod qwebengineprofile;
 mod qwebenginepermission;
 mod qwebengineview;
 mod qwidget;
+mod qt;
 
 pub use cxx_qt::*;
 pub use cxx_qt_lib::*;
@@ -25,3 +26,4 @@ pub use qwebengineprofile::{PersistentCookiesPolicy, QWebEngineProfile};
 pub use qwebenginepermission::{PermissionType, QWebEnginePermission, State};
 pub use qwebengineview::QWebEngineView;
 pub use qwidget::QWidget;
+pub use qt::{WindowFlags, WindowType};

@@ -8,6 +8,12 @@ mod ffi {
         type QString = cxx_qt_lib::QString;
     }
 
+    #[namespace = "Qt"]
+    unsafe extern "C++" {
+        include!(<QtWidgets/QWidget>);
+        type WindowFlags = crate::WindowFlags;
+    }
+
     unsafe extern "C++Qt" {
         include!(<QtWidgets/QWidget>);
 
@@ -28,6 +34,9 @@ mod ffi {
 
         #[cxx_name = "setParent"]
         unsafe fn set_parent(self: Pin<&mut QWidget>, parent: *mut QWidget);
+
+        #[cxx_name = "setWindowFlags"]
+        fn set_window_flags(self: Pin<&mut QWidget>, flags: WindowFlags);
     }
 
     #[namespace = "rust::cxxqtlib1"]
