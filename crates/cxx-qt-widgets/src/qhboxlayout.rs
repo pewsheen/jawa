@@ -9,9 +9,11 @@ mod ffi {
     unsafe extern "C++Qt" {
         include!(<QtWidgets/QHBoxLayout>);
         type QWidget = crate::QWidget;
+        type QBoxLayout = crate::QBoxLayout;
 
         /// Horizontal box layout for arranging child widgets in a row.
         #[qobject]
+        #[base = QBoxLayout]
         type QHBoxLayout;
 
         /// Sets the spacing between items in the layout.

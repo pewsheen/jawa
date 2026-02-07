@@ -16,6 +16,7 @@ mod ffi {
     unsafe extern "C++Qt" {
         include!("cxx-qt-widgets/qboxlayout.h");
         type QWidget = crate::QWidget;
+        type QLayout = crate::QLayout;
 
         /// Box layout for arranging child widgets in a single row or column.
         #[qobject]
@@ -29,6 +30,10 @@ mod ffi {
             strech: i32,
             alignment: Alignment,
         );
+
+        /// Adds a layout to the layout.
+        #[cxx_name = "addLayout"]
+        unsafe fn add_layout_raw(self: Pin<&mut QBoxLayout>, layout: *mut QLayout, strech: i32);
 
         /// Sets the spacing between items in the layout.
         #[cxx_name = "setSpacing"]
@@ -102,6 +107,23 @@ impl ffi::QBoxLayout {
                 0,
                 Alignment::new(),
             );
+        }
+    }
+
+    /// Adds a layout to this layout, transferring ownership to the parent layout.
+    pub fn add_layout(self: Pin<&mut QBoxLayout>, layout: &mut WidgetPtr<crate::QLayout>) {
+        self.add_layout_with_stretch(layout, 0);
+    }
+
+    /// Adds a layout with the given stretch factor.
+    pub fn add_layout_with_stretch(
+        self: Pin<&mut QBoxLayout>,
+        layout: &mut WidgetPtr<crate::QLayout>,
+        strech: i32,
+    ) {
+        layout.release();
+        unsafe {
+            self.add_layout_raw(layout.as_mut_ptr(), strech);
         }
     }
 }

@@ -35,6 +35,7 @@ fn main() {
         "qboxlayout",
         "qdesktopservices",
         "qhboxlayout",
+        "qlayout",
         "qmainwindow",
         "qmessagebox",
         "qpushbutton",
