@@ -2,7 +2,7 @@ use std::{pin::Pin, ptr::null_mut};
 
 use cxx_qt_widgets::{
     QBoxLayout, QHBoxLayout, QLabel, QLayout, QVBoxLayout, QWidget, WidgetPtr, WindowFlags,
-    WindowType, casting::Upcast,
+    WindowType, casting::Upcast, QMouseEvent
 };
 
 #[cxx_qt::bridge]
@@ -13,29 +13,21 @@ pub mod qobject {
         type WindowFlags = cxx_qt_widgets::WindowFlags;
 
     }
-    // Define the API from QtQuick that we need
+
     unsafe extern "C++" {
         include!(<memory>);
-        /// Base for Qt type
         type RustQWidget = cxx_qt_widgets::RustQWidget;
+        type QMouseEvent = cxx_qt_widgets::QMouseEvent;
     }
 
     unsafe extern "RustQt" {
         #[qobject]
         #[base = RustQWidget]
         type NotificationPopup = super::NotificationPopupRust;
-    }
 
-    #[namespace = "rust::cxxqtlib1"]
-    unsafe extern "C++Qt" {
-        include!("cxx-qt-lib/common.h");
-
-        // #[doc(hidden)]
-        // #[cxx_name = "make_unique"]
-        // unsafe fn new_popup(
-        //     // parent: *mut QWidget,
-        //     // window_flags: WindowFlags,
-        // ) -> UniquePtr<NotificationPopup>;
+        #[cxx_override]
+        #[cxx_name = "mouseReleaseEvent"]
+        fn mouse_release_event(self: Pin<&mut Self>, event: *mut QMouseEvent);
     }
 }
 
@@ -43,12 +35,11 @@ pub mod qobject {
 #[derive(Default)]
 pub struct NotificationPopupRust;
 
-// impl qobject::NotificationPopup {
-//     /// Creates a new notification popup.
-//     // pub fn new() -> WidgetPtr<Self> {
-//     //     unsafe { qobject::new_popup().into() }
-//     // }
-// }
+impl qobject::NotificationPopup {
+    pub fn mouse_release_event(self: Pin<&mut Self>, event: *mut QMouseEvent) {
+        println!("Mouse released on notification popup!");
+    }
+}
 
 pub struct NotificationPopup {
     this: WidgetPtr<QHBoxLayout>,
