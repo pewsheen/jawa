@@ -11,11 +11,11 @@ using PersistentCookiesPolicy = QWebEngineProfile::PersistentCookiesPolicy;
 
 inline void setNotificationPresenter(
 	QWebEngineProfile& profile,
-	rust::Fn<void(const QWebEngineNotification&)> presenter)
+	rust::Fn<void(std::unique_ptr<QWebEngineNotification>)> presenter)
 {
 	profile.setNotificationPresenter(
 		[presenter = std::move(presenter)](std::unique_ptr<QWebEngineNotification> notification) mutable {
-			presenter(*notification);
+			presenter(std::move(notification));
 		});
 }
 

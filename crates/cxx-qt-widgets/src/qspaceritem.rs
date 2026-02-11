@@ -1,5 +1,3 @@
-use cxx::UniquePtr;
-
 pub use ffi::QSpacerItem;
 
 use crate::WidgetPtr;

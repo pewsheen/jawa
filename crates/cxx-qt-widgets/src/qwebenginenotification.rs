@@ -31,4 +31,6 @@ mod ffi {
         /// Returns the origin of the notification.
         fn origin(self: &QWebEngineNotification) -> QUrl;
     }
+
+    impl UniquePtr<QWebEngineNotification> {}
 }

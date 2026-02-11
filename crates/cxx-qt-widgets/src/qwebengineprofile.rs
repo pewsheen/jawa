@@ -1,6 +1,7 @@
 use std::pin::Pin;
 
-use crate::WidgetPtr;
+use crate::{WidgetPtr, QWebEngineNotification};
+use cxx::UniquePtr;
 
 pub use ffi::{PersistentCookiesPolicy, QWebEngineProfile};
 
@@ -74,7 +75,7 @@ mod ffi {
         #[cxx_name = "setNotificationPresenter"]
         fn set_notification_presenter_raw(
             profile: Pin<&mut QWebEngineProfile>,
-            presenter: fn(&QWebEngineNotification),
+            presenter: fn(UniquePtr<QWebEngineNotification>),
         );
     }
 
@@ -109,7 +110,7 @@ impl QWebEngineProfile {
 
     pub fn set_notification_presenter(
         self: Pin<&mut Self>,
-        presenter: fn(&crate::QWebEngineNotification),
+        presenter: fn(UniquePtr<QWebEngineNotification>),
     ) {
         ffi::set_notification_presenter_raw(self, presenter);
     }
