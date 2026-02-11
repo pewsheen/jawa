@@ -45,5 +45,5 @@ pub use qwebenginepage::{QWebEnginePage, NavigationType};
 pub use qwebengineprofile::{PersistentCookiesPolicy, QWebEngineProfile};
 pub use qwebenginepermission::{PermissionType, QWebEnginePermission, State};
 pub use qwebengineview::QWebEngineView;
-pub use qwidget::QWidget;
+pub use qwidget::{QWidget, RustQWidget};
 pub use qt::{WindowFlags, WindowType, AlignmentFlag, Alignment};

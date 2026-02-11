@@ -9,7 +9,7 @@ use cxx_qt_widgets::{
 pub mod qobject {
     #[namespace = "Qt"]
     unsafe extern "C++" {
-        include!(<QWidget>);
+        include!("cxx-qt-widgets/qwidget.h");
         type WindowFlags = cxx_qt_widgets::WindowFlags;
 
     }
@@ -17,12 +17,12 @@ pub mod qobject {
     unsafe extern "C++" {
         include!(<memory>);
         /// Base for Qt type
-        type QWidget = cxx_qt_widgets::QWidget;
+        type RustQWidget = cxx_qt_widgets::RustQWidget;
     }
 
     unsafe extern "RustQt" {
         #[qobject]
-        #[base = QWidget]
+        #[base = RustQWidget]
         type NotificationPopup = super::NotificationPopupRust;
     }
 

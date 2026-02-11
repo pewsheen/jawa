@@ -1,5 +1,5 @@
 use crate::WidgetPtr;
-pub use ffi::QWidget;
+pub use ffi::{QWidget, RustQWidget};
 
 #[cxx_qt::bridge]
 mod ffi {
@@ -10,13 +10,11 @@ mod ffi {
 
     #[namespace = "Qt"]
     unsafe extern "C++" {
-        include!(<QtWidgets/QWidget>);
+        include!("cxx-qt-widgets/qwidget.h");
         type WindowFlags = crate::WindowFlags;
     }
 
     unsafe extern "C++Qt" {
-        include!(<QtWidgets/QWidget>);
-
         /// Base class of all user interface objects.
         #[qobject]
         type QWidget;
@@ -46,6 +44,12 @@ mod ffi {
         #[doc(hidden)]
         #[cxx_name = "make_unique"]
         fn new_widget() -> UniquePtr<QWidget>;
+    }
+
+    unsafe extern "C++Qt" {
+        /// A base class for Rust types who want to integrate with QWidgets.
+        #[qobject]
+        type RustQWidget;
     }
 }
 

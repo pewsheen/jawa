@@ -85,7 +85,6 @@ mod ffi {
     }
 }
 
-use cxx::type_id;
 pub use ffi::{WindowType, AlignmentFlag};
 
 /// [`QFlags`] of [`WindowType`].
