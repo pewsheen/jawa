@@ -1,6 +1,6 @@
 use std::pin::Pin;
 
-use crate::{Alignment, QLayout, QWidget, WidgetPtr};
+use crate::{Alignment, QLayout, QWidget, WidgetPtr, QLayoutItem};
 use cxx::memory::UniquePtrTarget;
 use cxx_qt::casting::Upcast;
 
@@ -17,6 +17,7 @@ mod ffi {
         include!("cxx-qt-widgets/qboxlayout.h");
         type QWidget = crate::QWidget;
         type QLayout = crate::QLayout;
+        type QLayoutItem = crate::QLayoutItem;
 
         /// Box layout for arranging child widgets in a single row or column.
         #[qobject]
@@ -53,6 +54,10 @@ mod ffi {
         /// Sets the layout direction.
         #[cxx_name = "setDirection"]
         fn set_direction(self: Pin<&mut QBoxLayout>, direction: Direction);
+
+        /// Adds a layout item to the layout.
+        #[cxx_name = "addItem"]
+        unsafe fn add_item_raw(self: Pin<&mut QBoxLayout>, item: *mut QLayoutItem);
     }
 
     #[repr(i32)]
@@ -125,6 +130,14 @@ impl ffi::QBoxLayout {
         layout.release();
         unsafe {
             self.add_layout_raw((&mut *layout.as_mut_ptr()).upcast_mut(), strech);
+        }
+    }
+
+    /// Adds a layout item to this layout, transferring ownership to the parent layout.
+    pub fn add_item<T: Upcast<QLayoutItem> + UniquePtrTarget>(self: Pin<&mut QBoxLayout>, item: &mut WidgetPtr<T>) {
+        item.release();
+        unsafe {
+            self.add_item_raw((&mut *item.as_mut_ptr()).upcast_mut());
         }
     }
 }

@@ -2,14 +2,19 @@ use cxx::UniquePtr;
 
 pub use ffi::QSpacerItem;
 
+use crate::WidgetPtr;
+
 #[cxx_qt::bridge]
 mod ffi {
-    unsafe extern "C++" {
+    unsafe extern "C++Qt" {
         include!(<QtWidgets/QSpacerItem>);
         include!("cxx-qt-widgets/qsizepolicy.h");
         type Policy = crate::Policy;
+        type QLayoutItem = crate::QLayoutItem;
 
         /// A layout spacer item with a size policy.
+        #[qobject]
+        #[base = QLayoutItem]
         type QSpacerItem;
 
         /// Changes the spacer's size and size policies.
@@ -45,7 +50,7 @@ impl ffi::QSpacerItem {
         height: i32,
         horizontal_policy: crate::Policy,
         vertical_policy: crate::Policy,
-    ) -> UniquePtr<Self> {
-        ffi::new_spacer_item(width, height, horizontal_policy, vertical_policy)
+    ) -> WidgetPtr<Self> {
+        ffi::new_spacer_item(width, height, horizontal_policy, vertical_policy).into()
     }
 }

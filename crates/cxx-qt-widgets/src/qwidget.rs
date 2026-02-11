@@ -22,6 +22,9 @@ mod ffi {
         /// Shows the widget and its child widgets.
         fn show(self: Pin<&mut QWidget>);
 
+        /// Hides the widget and its child widgets.
+        fn hide(self: Pin<&mut QWidget>);
+
         /// Sets the window title for this widget.
         #[cxx_name = "setWindowTitle"]
         fn set_window_title(self: Pin<&mut QWidget>, title: &QString);

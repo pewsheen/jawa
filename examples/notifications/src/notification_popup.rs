@@ -3,7 +3,8 @@ use std::{pin::Pin, ptr::null_mut};
 use cxx_qt::impl_transitive_cast;
 use cxx_qt_lib::QString;
 use cxx_qt_widgets::{
-    Policy, QBoxLayout, QHBoxLayout, QLabel, QLayout, QMouseEvent, QPushButton, QSpacerItem, QVBoxLayout, QWidget, RustQWidget, WidgetPtr, WindowFlags, WindowType, casting::Upcast
+    Policy, QBoxLayout, QHBoxLayout, QLabel, QLayout, QMouseEvent, QPushButton, QSpacerItem,
+    QVBoxLayout, QWidget, RustQWidget, WidgetPtr, WindowFlags, WindowType, casting::Upcast,
 };
 
 #[cxx_qt::bridge]
@@ -57,14 +58,18 @@ impl ffi::NotificationPopup {
 }
 
 pub struct NotificationPopup {
-    this: WidgetPtr<ffi::NotificationPopup>,
+    // this: WidgetPtr<ffi::NotificationPopup>,
     icon: WidgetPtr<QLabel>,
     title: WidgetPtr<QLabel>,
     message: WidgetPtr<QLabel>,
 }
 
+unsafe impl Send for ffi::NotificationPopup {}
+unsafe impl Sync for ffi::NotificationPopup {}
+
 impl NotificationPopup {
     pub fn new() -> Self {
+        // TODO: new_shared
         let mut this = ffi::NotificationPopup::new();
         let mut widget: Pin<&mut QWidget> = this.pin_mut().upcast_pin();
         widget.as_mut().set_window_flags(WindowType::ToolTip.into());
@@ -87,21 +92,30 @@ impl NotificationPopup {
         title_layout.as_mut().add_widget(&mut title);
 
         let mut spacer_item = QSpacerItem::new(0, 0, Policy::Expanding, Policy::Minimum);
-        // title_layout.as_mut().add_item(&mut spacer_item);
-        // titleLayout->addItem(new QSpacerItem(0, 0, QSizePolicy::Expanding));
+        title_layout.as_mut().add_item(&mut spacer_item);
+
+        widget.as_mut().adjust_size();
+        widget.as_mut().show();
 
         let mut close = QPushButton::new();
         close.pin_mut().set_text(&QString::from("Close"));
         title_layout.as_mut().add_widget(&mut close);
+        close
+            .pin_mut()
+            .on_clicked(move |_, _| {
+                let mut widget: Pin<&mut QWidget> = this.pin_mut().upcast_pin();
+                widget.as_mut().hide();
+                println!("Close button clicked!");
+            })
+            .release();
         // connect(close, &QPushButton::clicked, this, &NotificationPopup::onClosed);
 
         let mut message = QLabel::new();
         body_layout.as_mut().add_widget(&mut message);
-        widget.as_mut().adjust_size();
-        // widget.as_mut().show();
+
 
         Self {
-            this,
+            // this,
             icon,
             title,
             message,

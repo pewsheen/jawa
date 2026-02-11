@@ -37,6 +37,7 @@ fn main() {
         "qhboxlayout",
         "qlabel",
         "qlayout",
+        "qlayoutitem",
         "qmainwindow",
         "qmessagebox",
         "qmouseevent",
