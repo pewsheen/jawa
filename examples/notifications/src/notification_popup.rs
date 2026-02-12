@@ -6,7 +6,7 @@ use std::{
 
 use cxx::UniquePtr;
 use cxx_qt::{Threading, impl_transitive_cast};
-use cxx_qt_lib::{QPoint, QString};
+use cxx_qt_lib::{MouseButton, QPoint, QString};
 use cxx_qt_widgets::{
     Policy, QBoxLayout, QHBoxLayout, QLabel, QMouseEvent, QPushButton, QSpacerItem, QVBoxLayout,
     QWebEngineNotification, QWidget, WidgetPtr, WindowType, casting::Upcast,
@@ -83,8 +83,13 @@ impl ffi::NotificationPopup {
     }
 
     pub fn mouse_release_event(self: Pin<&mut Self>, event: *mut QMouseEvent) {
-        // TODO:
-        println!("Mouse released on notification popup!");
+        let mut event: WidgetPtr<QMouseEvent> = event.into();
+        let notification: WidgetPtr<QWebEngineNotification> =
+            self.notification.borrow().as_mut_ptr().into();
+        if !notification.is_null() && event.pin_mut().button() == MouseButton::LeftButton {
+            notification.show();
+            self.on_close();
+        }
     }
 
     fn on_close(self: Pin<&mut ffi::NotificationPopup>) {
