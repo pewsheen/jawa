@@ -7,6 +7,9 @@ mod ffi {
         include!("cxx-qt-lib/qurl.h");
         type QString = cxx_qt_lib::QString;
         type QUrl = cxx_qt_lib::QUrl;
+        include!("cxx-qt-widgets/qimage.h");
+        type QImage = crate::QImage;
+
     }
 
     unsafe extern "C++Qt" {
@@ -31,6 +34,10 @@ mod ffi {
         /// Returns the origin of the notification.
         fn origin(self: &QWebEngineNotification) -> QUrl;
 
+        /// Returns the notification icon.
+        fn icon(self: &QWebEngineNotification) -> QImage;
+
+        /// Emitted when the notification is closed.
         #[qsignal]
         fn closed(self: Pin<&mut QWebEngineNotification>);
     }
