@@ -1,10 +1,14 @@
-use std::pin::Pin;
+use std::{
+    pin::Pin,
+    sync::{Arc, Mutex},
+};
 
+use cxx::UniquePtr;
 use cxx_qt::{Threading, impl_transitive_cast};
 use cxx_qt_lib::QString;
 use cxx_qt_widgets::{
-    Policy, QBoxLayout, QHBoxLayout, QLabel, QMouseEvent, QPushButton, QSpacerItem,
-    QVBoxLayout, QWidget, RustQWidget, WidgetPtr, WindowFlags, WindowType,
+    Policy, QBoxLayout, QHBoxLayout, QLabel, QMouseEvent, QPushButton, QSpacerItem, QVBoxLayout,
+    QWebEngineNotification, QWidget, WidgetPtr, WindowType,
     casting::Upcast,
 };
 
@@ -43,7 +47,6 @@ pub mod ffi {
     }
 
     impl cxx_qt::Threading for NotificationPopup {}
-
 }
 
 impl_transitive_cast!(ffi::NotificationPopup, ffi::RustQWidget, ffi::QWidget);
@@ -66,7 +69,7 @@ pub struct NotificationPopup {
     icon: WidgetPtr<QLabel>,
     title: WidgetPtr<QLabel>,
     message: WidgetPtr<QLabel>,
-    // notification: Arc<WidgetPtr<QWebEngineNotification>>,
+    notification: Arc<Mutex<UniquePtr<QWebEngineNotification>>>,
 }
 
 unsafe impl Send for NotificationPopup {}
@@ -76,6 +79,7 @@ impl NotificationPopup {
     pub fn new() -> Self {
         // TODO: new_shared
         let mut this = ffi::NotificationPopup::new();
+        let this_clone = this.qt_thread();
         let mut widget: Pin<&mut QWidget> = this.pin_mut().upcast_pin();
         widget.as_mut().set_window_flags(WindowType::ToolTip.into());
 
@@ -103,10 +107,15 @@ impl NotificationPopup {
         close.pin_mut().set_text(&QString::from("Close"));
         title_layout.as_mut().add_widget(&mut close);
 
+        let notification = Arc::new(Mutex::new(UniquePtr::null()));
+        let notification_clone = notification.clone();
         close
             .pin_mut()
             .on_clicked(move |_, _| {
-                // on_close(unsafe { this_clone.pin_mut_unchecked() }, notification_clone.as_ref());
+                let notification = notification_clone.clone();
+                let _ = this_clone.queue(move |this| {
+                    on_close(this, &notification.lock().unwrap());
+                });
             })
             .release();
 
@@ -114,24 +123,54 @@ impl NotificationPopup {
         body_layout.as_mut().add_widget(&mut message);
 
         widget.as_mut().adjust_size();
-        widget.as_mut().show();
 
         Self {
             this,
             icon,
             title,
             message,
-            // notification,
+            notification,
         }
     }
 
-    pub fn test(&mut self) {
-        self.title.pin_mut().set_text(&QString::from("Test Notification"));
-        self.message.pin_mut().set_text(&QString::from("This is a test notification message."));
+    pub fn present(&mut self, new_notification: UniquePtr<QWebEngineNotification>) {
+        let popup = self.this.qt_thread();
+        let mut notification = self.notification.lock().unwrap();
+        if !notification.is_null() {
+            on_close(self.this.pin_mut(), &notification);
+        }
+        *notification = new_notification;
+
+        self.title.pin_mut().set_text(&notification.title());
+        self.message.pin_mut().set_text(&notification.message());
+        //TODO: icon
+
+        let mut widget: Pin<&mut QWidget> = self.this.pin_mut().upcast_pin();
+        widget.show();
+        notification.show();
+
+        notification.pin_mut().on_closed(move |notification| {
+            notification.close();
+            let _ = popup.queue(move |this| {
+                let mut widget: Pin<&mut QWidget> = this.upcast_pin();
+                widget.as_mut().hide();
+
+            });
+        }).release();
+        // QTimer::singleShot(10000, notification.get(), [&] () { onClosed(); });
+
+        // position our popup in the right corner of its parent widget
+        // move(parentWidget()->mapToGlobal(parentWidget()->rect().bottomRight() - QPoint(width() + 10, height() + 10)));
     }
 }
 
-fn on_close(this: Pin<&mut ffi::NotificationPopup>) {
+fn on_close(
+    this: Pin<&mut ffi::NotificationPopup>,
+    notification: &UniquePtr<QWebEngineNotification>,
+) {
     let mut widget: Pin<&mut QWidget> = this.upcast_pin();
     widget.as_mut().hide();
+    if !notification.is_null() {
+        notification.close();
+    }
 }

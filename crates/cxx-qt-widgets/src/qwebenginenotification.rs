@@ -30,7 +30,13 @@ mod ffi {
 
         /// Returns the origin of the notification.
         fn origin(self: &QWebEngineNotification) -> QUrl;
+
+        #[qsignal]
+        fn closed(self: Pin<&mut QWebEngineNotification>);
     }
 
     impl UniquePtr<QWebEngineNotification> {}
 }
+
+unsafe impl Send for QWebEngineNotification {}
+unsafe impl Sync for QWebEngineNotification {}
