@@ -1,8 +1,7 @@
 use std::{
     cell::RefCell,
     ops::DerefMut,
-    pin::{Pin, pin},
-    sync::{Arc, Mutex},
+    pin::Pin,
 };
 
 use cxx::UniquePtr;
@@ -12,6 +11,7 @@ use cxx_qt_widgets::{
     Policy, QBoxLayout, QHBoxLayout, QLabel, QMouseEvent, QPushButton, QSpacerItem, QVBoxLayout,
     QWebEngineNotification, QWidget, WidgetPtr, WindowType, casting::Upcast,
 };
+pub use ffi::NotificationPopup;
 
 #[cxx_qt::bridge]
 pub mod ffi {
@@ -47,7 +47,7 @@ pub mod ffi {
 
         #[doc(hidden)]
         #[cxx_name = "make_unique"]
-        fn new_popup() -> UniquePtr<NotificationPopup>;
+        fn _new_popup() -> UniquePtr<NotificationPopup>;
 
         #[doc(hidden)]
         #[cxx_name = "new_ptr"]
@@ -78,10 +78,6 @@ impl Default for NotificationPopupRust {
 }
 
 impl ffi::NotificationPopup {
-    pub fn new() -> WidgetPtr<Self> {
-        ffi::new_popup().into()
-    }
-
     pub fn new_with_parent(parent: Pin<&mut QWidget>) -> WidgetPtr<Self> {
         unsafe { ffi::new_popup_with_parent(parent.get_unchecked_mut()).into() }
     }
@@ -100,18 +96,9 @@ impl ffi::NotificationPopup {
             notification.close();
         }
     }
-}
 
-pub struct NotificationPopup {
-    this: WidgetPtr<ffi::NotificationPopup>,
-}
-
-unsafe impl Send for NotificationPopup {}
-unsafe impl Sync for NotificationPopup {}
-
-impl NotificationPopup {
-    pub fn new(parent: Pin<&mut QWidget>) -> Self {
-        let mut this = ffi::NotificationPopup::new_with_parent(parent);
+    pub fn new(parent: Pin<&mut QWidget>) -> WidgetPtr<NotificationPopup> {
+        let mut this = NotificationPopup::new_with_parent(parent);
         let mut title = this.title.as_mut_ptr().into();
         let mut message = this.message.as_mut_ptr().into();
         let mut icon = this.icon.as_mut_ptr().into();
@@ -155,29 +142,30 @@ impl NotificationPopup {
 
         widget.as_mut().adjust_size();
 
-        Self { this }
+
+        this
     }
 
-    pub fn present(&mut self, new_notification: UniquePtr<QWebEngineNotification>) {
-        let popup = self.this.qt_thread();
-        let mut title: WidgetPtr<QLabel> = self.this.title.as_mut_ptr().into();
-        let mut message: WidgetPtr<QLabel> = self.this.message.as_mut_ptr().into();
+    pub fn present(mut self: Pin<&mut NotificationPopup>, new_notification: UniquePtr<QWebEngineNotification>) {
+        let popup = self.qt_thread();
+        let mut title: WidgetPtr<QLabel> = self.title.as_mut_ptr().into();
+        let mut message: WidgetPtr<QLabel> = self.message.as_mut_ptr().into();
 
         {
-            if !self.this.notification.borrow().is_null() {
-                self.this.pin_mut().on_close();
+            if !self.notification.borrow().is_null() {
+                self.as_mut().on_close();
             }
-            let mut notification_ref = self.this.notification.borrow_mut();
+            let mut notification_ref = self.notification.borrow_mut();
             *notification_ref.deref_mut() = new_notification;
         }
 
         let mut notification: WidgetPtr<QWebEngineNotification> =
-            self.this.notification.borrow().as_mut_ptr().into();
+            self.notification.borrow().as_mut_ptr().into();
         title.pin_mut().set_text(&notification.title());
         message.pin_mut().set_text(&notification.message());
         //TODO: icon
 
-        let mut widget: Pin<&mut QWidget> = self.this.pin_mut().upcast_pin();
+        let mut widget: Pin<&mut QWidget> = self.as_mut().upcast_pin();
         widget.as_mut().show();
         notification.show();
 
