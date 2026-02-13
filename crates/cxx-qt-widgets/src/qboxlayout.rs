@@ -10,7 +10,6 @@ pub use ffi::{Direction, QBoxLayout};
 mod ffi {
     #[namespace = "Qt"]
     unsafe extern "C++" {
-        include!(<QtWidgets/QWidget>);
         type Alignment = crate::Alignment;
     }
     unsafe extern "C++Qt" {

@@ -5,11 +5,6 @@ use cxx::{ExternType, type_id};
 #[cxx::bridge]
 mod ffi {
     unsafe extern "C++" {
-        include!("cxx-qt-lib/qstring.h");
-        type QString = cxx_qt_lib::QString;
-    }
-
-    unsafe extern "C++" {
         include!("cxx-qt-widgets/qimage.h");
         type QImage = super::QImage;
 

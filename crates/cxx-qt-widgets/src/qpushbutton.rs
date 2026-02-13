@@ -9,7 +9,7 @@ mod ffi {
     }
 
     unsafe extern "C++Qt" {
-        include!(<QtWidgets/QPushButton>);
+        include!("cxx-qt-widgets/qpushbutton.h");
         type QWidget = crate::QWidget;
 
         #[qobject]

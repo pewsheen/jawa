@@ -13,7 +13,7 @@ mod ffi {
     }
 
     unsafe extern "C++Qt" {
-        include!(<QtWidgets/QMainWindow>);
+        include!("cxx-qt-widgets/qmainwindow.h");
         type QWidget = crate::QWidget;
 
         /// Main application window, providing a menu bar, toolbars, and a central widget.

@@ -4,13 +4,12 @@ pub use ffi::QSinglePointEvent;
 mod ffi {
     #[namespace = "Qt"]
     extern "C++" {
-        include!(<QtGui/QSinglePointEvent>);
         type MouseButton = crate::MouseButton;
         type MouseButtons = crate::MouseButtons;
     }
 
     unsafe extern "C++" {
-        include!(<QtGui/QSinglePointEvent>);
+        include!("cxx-qt-widgets/qsinglepointevent.h");
         /// Base class for pointer events with a single point (mouse, tablet).
         type QSinglePointEvent;
 

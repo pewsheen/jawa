@@ -5,8 +5,8 @@ use crate::WidgetPtr;
 #[cxx_qt::bridge]
 mod ffi {
     unsafe extern "C++Qt" {
-        include!(<QtWidgets/QSpacerItem>);
         include!("cxx-qt-widgets/qsizepolicy.h");
+        include!("cxx-qt-widgets/qspaceritem.h");
         type Policy = crate::Policy;
         type QLayoutItem = crate::QLayoutItem;
 

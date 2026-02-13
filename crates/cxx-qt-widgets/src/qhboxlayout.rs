@@ -9,7 +9,7 @@ pub use ffi::QHBoxLayout;
 #[cxx_qt::bridge]
 mod ffi {
     unsafe extern "C++Qt" {
-        include!(<QtWidgets/QHBoxLayout>);
+        include!("cxx-qt-widgets/qhboxlayout.h");
         type QWidget = crate::QWidget;
         type QBoxLayout = crate::QBoxLayout;
         type QLayout = crate::QLayout;

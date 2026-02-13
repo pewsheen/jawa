@@ -9,7 +9,7 @@ pub use ffi::QVBoxLayout;
 #[cxx_qt::bridge]
 mod ffi {
     unsafe extern "C++Qt" {
-        include!(<QtWidgets/QVBoxLayout>);
+        include!("cxx-qt-widgets/qvboxlayout.h");
         type QWidget = crate::QWidget;
         type QBoxLayout = crate::QBoxLayout;
         type QLayout = crate::QLayout;

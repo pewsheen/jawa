@@ -4,7 +4,7 @@ pub use ffi::QMouseEvent;
 mod ffi {
     #[namespace = "Qt"]
     extern "C++" {
-        include!(<QtGui/QMouseEvent>);
+        include!("cxx-qt-widgets/qmouseevent.h");
         type MouseButton = crate::MouseButton;
     }
 

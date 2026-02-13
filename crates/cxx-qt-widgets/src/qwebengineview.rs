@@ -14,7 +14,7 @@ mod ffi {
     }
 
     unsafe extern "C++Qt" {
-        include!(<QWebEngineView>);
+        include!("cxx-qt-widgets/qwebengineview.h");
         type QWidget = crate::QWidget;
         type QWebEnginePage = crate::QWebEnginePage;
 

@@ -10,7 +10,7 @@ mod ffi {
     }
 
     unsafe extern "C++Qt" {
-        include!(<QtWidgets/QLabel>);
+        include!("cxx-qt-widgets/qlabel.h");
         type QWidget = crate::QWidget;
         type QPixmap = crate::QPixmap;
 

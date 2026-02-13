@@ -3,7 +3,7 @@ use crate::{QFlags, unsafe_impl_qflag};
 #[cxx::bridge(namespace = "Qt")]
 mod ffi {
     unsafe extern "C++" {
-        include!(<QtWidgets/QWidget>);
+        include!("cxx-qt-widgets/qwidget.h");
     }
 
     #[derive(Debug)]

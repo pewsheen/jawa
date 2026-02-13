@@ -13,7 +13,7 @@ mod ffi {
     }
 
     unsafe extern "C++Qt" {
-        include!(<QWebEngineNotification>);
+        include!("cxx-qt-widgets/qwebenginenotification.h");
 
         /// Notification object emitted by the web engine.
         #[qobject]
