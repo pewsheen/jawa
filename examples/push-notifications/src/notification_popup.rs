@@ -4,8 +4,8 @@ use cxx::UniquePtr;
 use cxx_qt::{Threading, impl_transitive_cast};
 use cxx_qt_lib::{MouseButton, QPoint, QString};
 use cxx_qt_widgets::{
-    Policy, QBoxLayout, QHBoxLayout, QLabel, QMouseEvent, QPixmap, QPushButton, QSpacerItem,
-    QTimer, QVBoxLayout, QWebEngineNotification, QWidget, TransformationMode, WidgetPtr,
+    Policy, QBoxLayout, QHBoxLayout, QLabel, QMouseEvent, QPushButton, QSpacerItem,
+    QTimer, QVBoxLayout, QWebEngineNotification, QWidget, WidgetPtr,
     WindowType, casting::Upcast,
 };
 pub use ffi::NotificationPopup;
@@ -154,7 +154,7 @@ impl ffi::NotificationPopup {
         let popup = self.qt_thread();
         let mut title: WidgetPtr<QLabel> = self.title.as_mut_ptr().into();
         let mut message: WidgetPtr<QLabel> = self.message.as_mut_ptr().into();
-        let mut icon: WidgetPtr<QLabel> = self.icon.as_mut_ptr().into();
+        // let mut icon: WidgetPtr<QLabel> = self.icon.as_mut_ptr().into();
 
         {
             if !self.notification.borrow().is_null() {
@@ -168,7 +168,7 @@ impl ffi::NotificationPopup {
             self.notification.borrow().as_mut_ptr().into();
         title.pin_mut().set_text(&notification.title());
         message.pin_mut().set_text(&notification.message());
-        let icon_height = icon.height();
+        // let icon_height = icon.height();
         // icon.pin_mut().set_pixmap(
         //     &QPixmap::from_image(&notification.icon())
         //         .scaled_to_height(icon_height, TransformationMode::FastTransformation),

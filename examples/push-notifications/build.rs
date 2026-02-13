@@ -5,7 +5,6 @@ fn main() {
         .qt_module("Widgets")
         .qt_module("WebEngineCore")
         .qrc("data/data.qrc")
-        .file("src/main.rs")
         .file("src/notification_popup.rs")
         .build();
 }

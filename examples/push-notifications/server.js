@@ -5,7 +5,7 @@ const express = require('express');
 const webpush = require('web-push');
 
 // setup server
-const port = 5000;
+const port = 5001;
 const server = express();
 server.use(express.json());
 server.use(express.static('content'));

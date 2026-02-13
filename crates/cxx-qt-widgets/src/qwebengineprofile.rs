@@ -77,6 +77,10 @@ mod ffi {
         /// Sets the notification presenter callback.
         #[cxx_name = "setNotificationPresenter"]
         fn set_notification_presenter_raw(profile: Pin<&mut QWebEngineProfile>);
+
+        /// Enables or disables the push service.
+        #[cxx_name = "setPushServiceEnabled"]
+        fn set_push_service_enabled(self: Pin<&mut QWebEngineProfile>, enabled: bool);
     }
 
     #[namespace = "rust::cxxqtlib1"]
@@ -121,7 +125,6 @@ impl QWebEngineProfile {
         F: FnMut(UniquePtr<QWebEngineNotification>) + Send + 'static,
     {
         let profile_key = self.as_ref().get_ref() as *const Self as usize;
-        dbg!(profile_key);
         let map = PRESENTERS.get_or_init(|| Mutex::new(HashMap::new()));
         map.lock().unwrap().insert(profile_key, Box::new(presenter));
         ffi::set_notification_presenter_raw(self);

@@ -1,3 +1,6 @@
 target
 Cargo.lock
 .qmlls.ini
+**/node_modules
+package-lock.json
+package.json
