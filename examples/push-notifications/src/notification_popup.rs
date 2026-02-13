@@ -169,10 +169,11 @@ impl ffi::NotificationPopup {
         title.pin_mut().set_text(&notification.title());
         message.pin_mut().set_text(&notification.message());
         let icon_height = icon.height();
-        icon.pin_mut().set_pixmap(
-            &QPixmap::from_image(&notification.icon())
-                .scaled_to_height(icon_height, TransformationMode::FastTransformation),
-        );
+        // icon.pin_mut().set_pixmap(
+        //     &QPixmap::from_image(&notification.icon())
+        //         .scaled_to_height(icon_height, TransformationMode::FastTransformation),
+        // );
+        // TODO: m_icon.setPixmap(QPixmap(":/icon.png").scaledToHeight(m_icon.height()));
 
         let mut widget: Pin<&mut QWidget> = self.as_mut().upcast_pin();
         widget.as_mut().show();
