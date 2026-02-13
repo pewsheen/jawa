@@ -26,7 +26,7 @@ mod ffi {
         // it doesn't make sense to pass Qt::AlignBaseline to QPainter::drawText(), so there
         // shouldn't really be any ambiguity between the two overlapping enum values.
         AlignVertical_Mask = 0x01e0,
-        AlignCenter = 0x0084
+        AlignCenter = 0x0084,
     }
 
     #[derive(Debug)]
@@ -76,26 +76,26 @@ mod ffi {
     #[repr(u32)]
     enum ImageConversionFlag {
         // ColorMode_Mask          = 0x00000003,
-        AutoColor               = 0x00000000,
-        ColorOnly               = 0x00000003,
-        MonoOnly                = 0x00000002,
+        AutoColor = 0x00000000,
+        ColorOnly = 0x00000003,
+        MonoOnly = 0x00000002,
         // Reserved             = 0x00000001,
         // AlphaDither_Mask        = 0x0000000c,
         // ThresholdAlphaDither    = 0x00000000,
-        OrderedAlphaDither      = 0x00000004,
-        DiffuseAlphaDither      = 0x00000008,
-        NoAlpha                 = 0x0000000c, // Not supported
-        Dither_Mask             = 0x00000030,
+        OrderedAlphaDither = 0x00000004,
+        DiffuseAlphaDither = 0x00000008,
+        NoAlpha = 0x0000000c, // Not supported
+        Dither_Mask = 0x00000030,
         // DiffuseDither           = 0x00000000,
-        OrderedDither           = 0x00000010,
-        ThresholdDither         = 0x00000020,
+        OrderedDither = 0x00000010,
+        ThresholdDither = 0x00000020,
         // ReservedDither       = 0x00000030,
-        DitherMode_Mask         = 0x000000c0,
+        DitherMode_Mask = 0x000000c0,
         // AutoDither              = 0x00000000,
-        PreferDither            = 0x00000040,
-        AvoidDither             = 0x00000080,
-        NoOpaqueDetection       = 0x00000100,
-        NoFormatConversion      = 0x00000200
+        PreferDither = 0x00000040,
+        AvoidDither = 0x00000080,
+        NoOpaqueDetection = 0x00000100,
+        NoFormatConversion = 0x00000200,
     }
 
     #[derive(Debug)]
@@ -113,7 +113,7 @@ mod ffi {
     }
 }
 
-pub use ffi::{WindowType, AlignmentFlag, ImageConversionFlag, TransformationMode};
+pub use ffi::{AlignmentFlag, ImageConversionFlag, TransformationMode, WindowType};
 
 /// [`QFlags`] of [`WindowType`].
 pub type WindowFlags = QFlags<WindowType>;

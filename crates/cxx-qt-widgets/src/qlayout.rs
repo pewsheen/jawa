@@ -74,8 +74,6 @@ impl ffi::QLayout {
         widget: &mut WidgetPtr<T>,
         alignment: Alignment,
     ) -> bool {
-        unsafe {
-            self.set_alignment_widget((&mut *widget.as_mut_ptr()).upcast_mut(), alignment)
-        }
+        unsafe { self.set_alignment_widget((&mut *widget.as_mut_ptr()).upcast_mut(), alignment) }
     }
 }

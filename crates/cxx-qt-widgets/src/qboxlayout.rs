@@ -1,6 +1,6 @@
 use std::pin::Pin;
 
-use crate::{Alignment, QLayout, QWidget, WidgetPtr, QLayoutItem};
+use crate::{Alignment, QLayout, QLayoutItem, QWidget, WidgetPtr};
 use cxx::memory::UniquePtrTarget;
 use cxx_qt::casting::Upcast;
 
@@ -117,7 +117,10 @@ impl ffi::QBoxLayout {
     }
 
     /// Adds a layout to this layout, transferring ownership to the parent layout.
-    pub fn add_layout<T: Upcast<QLayout> + UniquePtrTarget>(self: Pin<&mut QBoxLayout>, layout: &mut WidgetPtr<T>) {
+    pub fn add_layout<T: Upcast<QLayout> + UniquePtrTarget>(
+        self: Pin<&mut QBoxLayout>,
+        layout: &mut WidgetPtr<T>,
+    ) {
         self.add_layout_with_stretch(layout, 0);
     }
 
@@ -134,7 +137,10 @@ impl ffi::QBoxLayout {
     }
 
     /// Adds a layout item to this layout, transferring ownership to the parent layout.
-    pub fn add_item<T: Upcast<QLayoutItem> + UniquePtrTarget>(self: Pin<&mut QBoxLayout>, item: &mut WidgetPtr<T>) {
+    pub fn add_item<T: Upcast<QLayoutItem> + UniquePtrTarget>(
+        self: Pin<&mut QBoxLayout>,
+        item: &mut WidgetPtr<T>,
+    ) {
         item.release();
         unsafe {
             self.add_item_raw((&mut *item.as_mut_ptr()).upcast_mut());

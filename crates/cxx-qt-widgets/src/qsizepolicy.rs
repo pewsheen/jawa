@@ -1,6 +1,6 @@
 use cxx::UniquePtr;
 
-pub use ffi::{QSizePolicy, Policy};
+pub use ffi::{Policy, QSizePolicy};
 
 #[cxx_qt::bridge]
 mod ffi {

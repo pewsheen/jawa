@@ -26,7 +26,8 @@ mod ffi {
 pub struct QImage {
     _a1: MaybeUninit<usize>,
     _a2: MaybeUninit<usize>,
-    _a3: MaybeUninit<usize>,}
+    _a3: MaybeUninit<usize>,
+}
 
 // Safety:
 //

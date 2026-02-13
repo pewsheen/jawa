@@ -1,7 +1,8 @@
 use std::pin::Pin;
 
 use cxx_qt_widgets::{
-    PermissionType, QApplication, QFlag, QMainWindow, QMessageBox, QUrl, QWebEngineView, QWidget, StandardButton, StandardButtons, casting::Upcast
+    PermissionType, QApplication, QFlag, QMainWindow, QMessageBox, QUrl, QWebEngineView, QWidget,
+    StandardButton, StandardButtons, casting::Upcast,
 };
 
 fn main() {
@@ -20,9 +21,13 @@ fn main() {
         }
 
         let mut message_box = QMessageBox::new();
-        message_box
-            .pin_mut()
-            .set_text(&format!("{} wants to know your location", permission.origin().host_or_default()).into());
+        message_box.pin_mut().set_text(
+            &format!(
+                "{} wants to know your location",
+                permission.origin().host_or_default()
+            )
+            .into(),
+        );
         message_box.pin_mut().set_informative_text(
             &"Do you want to send your current location to this website?".into(),
         );

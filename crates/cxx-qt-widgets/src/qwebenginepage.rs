@@ -1,5 +1,5 @@
 use crate::WidgetPtr;
-pub use ffi::{QWebEnginePage, NavigationType};
+pub use ffi::{NavigationType, QWebEnginePage};
 
 #[cxx_qt::bridge]
 mod ffi {
@@ -10,7 +10,6 @@ mod ffi {
         type QWebEngineProfile = crate::QWebEngineProfile;
         type QString = cxx_qt_lib::QString;
         type QUrl = cxx_qt_lib::QUrl;
-
 
         include!("cxx-qt-widgets/qwebenginepage.h");
         /// Represents the contents of a web page without a visual widget.

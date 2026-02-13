@@ -2,8 +2,8 @@ use std::{
     collections::HashMap,
     pin::Pin,
     sync::{
-        atomic::{AtomicU64, Ordering},
         Mutex, OnceLock,
+        atomic::{AtomicU64, Ordering},
     },
 };
 

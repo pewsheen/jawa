@@ -1,5 +1,5 @@
-use cxx_qt_lib::{QString, QUrl};
 use cxx_qt::QObject;
+use cxx_qt_lib::{QString, QUrl};
 
 #[cxx_qt::bridge]
 mod ffi {

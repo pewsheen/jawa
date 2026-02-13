@@ -2,7 +2,7 @@ use std::pin::Pin;
 
 use crate::{QWidget, WidgetPtr};
 
-use cxx_qt::{impl_transitive_cast, casting::Upcast};
+use cxx_qt::{casting::Upcast, impl_transitive_cast};
 pub use ffi::QHBoxLayout;
 
 #[cxx_qt::bridge]
