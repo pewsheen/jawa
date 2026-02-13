@@ -74,13 +74,41 @@ mod ffi {
         WindowFullscreenButtonHint = 0x80000000,
     }
 
+    #[derive(Debug)]
+    #[repr(u32)]
+    /// This type is used to signify an object's orientation.
+    enum ImageConversionFlag {
+        // ColorMode_Mask          = 0x00000003,
+        AutoColor               = 0x00000000,
+        ColorOnly               = 0x00000003,
+        MonoOnly                = 0x00000002,
+        // Reserved             = 0x00000001,
+        // AlphaDither_Mask        = 0x0000000c,
+        // ThresholdAlphaDither    = 0x00000000,
+        OrderedAlphaDither      = 0x00000004,
+        DiffuseAlphaDither      = 0x00000008,
+        NoAlpha                 = 0x0000000c, // Not supported
+        Dither_Mask             = 0x00000030,
+        // DiffuseDither           = 0x00000000,
+        OrderedDither           = 0x00000010,
+        ThresholdDither         = 0x00000020,
+        // ReservedDither       = 0x00000030,
+        DitherMode_Mask         = 0x000000c0,
+        // AutoDither              = 0x00000000,
+        PreferDither            = 0x00000040,
+        AvoidDither             = 0x00000080,
+        NoOpaqueDetection       = 0x00000100,
+        NoFormatConversion      = 0x00000200
+    }
+
     extern "C++" {
         type AlignmentFlag;
         type WindowType;
+        type ImageConversionFlag;
     }
 }
 
-pub use ffi::{WindowType, AlignmentFlag};
+pub use ffi::{WindowType, AlignmentFlag, ImageConversionFlag};
 
 /// [`QFlags`] of [`WindowType`].
 pub type WindowFlags = QFlags<WindowType>;
@@ -89,3 +117,7 @@ unsafe_impl_qflag!(WindowType, "Qt::WindowFlags", u32);
 /// [`QFlags`] of [`AlignmentFlag`].
 pub type Alignment = QFlags<AlignmentFlag>;
 unsafe_impl_qflag!(AlignmentFlag, "Qt::Alignment", u32);
+
+/// [`QFlags`] of [`ImageConversionFlag`].
+pub type ImageConversionFlags = QFlags<ffi::ImageConversionFlag>;
+unsafe_impl_qflag!(ffi::ImageConversionFlag, "Qt::ImageConversionFlags", u32);

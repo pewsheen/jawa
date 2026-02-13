@@ -12,6 +12,7 @@ mod ffi {
     unsafe extern "C++Qt" {
         include!(<QtWidgets/QLabel>);
         type QWidget = crate::QWidget;
+        type QPixmap = crate::QPixmap;
 
         /// Display text or an image.
         #[qobject]
@@ -24,6 +25,11 @@ mod ffi {
 
         /// Shows the widget and its child widgets.
         fn show(self: Pin<&mut QLabel>);
+
+        #[cxx_name = "setPixmap"]
+        fn set_pixmap(self: Pin<&mut QLabel>, pixmap: &QPixmap);
+
+        fn height(self: &QLabel) -> i32;
     }
 
     #[namespace = "rust::cxxqtlib1"]

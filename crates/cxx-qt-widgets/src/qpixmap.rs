@@ -1,16 +1,21 @@
-pub use ffi::QPixmap;
+use std::mem::MaybeUninit;
+
+use cxx::{ExternType, type_id};
+
+use crate::{ImageConversionFlag, QImage};
 
 #[cxx::bridge]
 mod ffi {
+    #[namespace = "Qt"]
     unsafe extern "C++" {
-        include!("cxx-qt-lib/qstring.h");
-        type QString = cxx_qt_lib::QString;
+        type ImageConversionFlags = crate::ImageConversionFlags;
+
     }
 
     unsafe extern "C++" {
-        include!(<QtGui/QPixmap>);
+        include!("cxx-qt-widgets/qpixmap.h");
         type QImage = crate::QImage;
-        type QPixmap;
+        type QPixmap = super::QPixmap;
 
         #[cxx_name = "isNull"]
         fn is_null(self: &QPixmap) -> bool;
@@ -18,24 +23,29 @@ mod ffi {
         fn width(self: &QPixmap) -> i32;
         fn height(self: &QPixmap) -> i32;
 
-        // TODO: create header
-        // #[cxx_name = "fromImage"]
-        // fn from_image(image: &QImage) -> QPixmap;
-    }
-
-    #[namespace = "rust::cxxqtlib1"]
-    unsafe extern "C++" {
-        include!("cxx-qt-lib/common.h");
-
-        #[doc(hidden)]
-        #[cxx_name = "make_unique"]
-        fn new_pixmap() -> UniquePtr<QPixmap>;
+        #[cxx_name = "qpixmapFromImage"]
+        fn qpixmap_from_image(image: &QImage, flags: ImageConversionFlags) -> QPixmap;
     }
 }
 
-impl ffi::QPixmap {
-    /// Creates an empty pixmap.
-    pub fn new() -> cxx::UniquePtr<Self> {
-        ffi::new_pixmap()
+#[derive(Clone, Debug)]
+#[repr(C)]
+pub struct QPixmap {
+    _a1: MaybeUninit<usize>,
+    _a2: MaybeUninit<usize>,
+    _a3: MaybeUninit<usize>,
+}
+
+impl QPixmap {
+    pub fn from_image(image: &QImage) -> Self {
+        ffi::qpixmap_from_image(image, ImageConversionFlag::AutoColor.into())
     }
+}
+
+// Safety:
+//
+// Static checks on the C++ side to ensure the size is the same.
+unsafe impl ExternType for QPixmap {
+    type Id = type_id!("QPixmap");
+    type Kind = cxx::kind::Trivial;
 }
