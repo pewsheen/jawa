@@ -1,6 +1,10 @@
 use std::{
+    collections::HashMap,
     pin::Pin,
-    sync::{Mutex, OnceLock},
+    sync::{
+        atomic::{AtomicU64, Ordering},
+        Mutex, OnceLock,
+    },
 };
 
 use crate::WidgetPtr;
@@ -47,7 +51,7 @@ mod ffi {
         fn is_single_shot(self: &QTimer) -> bool;
 
         #[cxx_name = "singleShot"]
-        unsafe fn single_shot_raw(msec: i32, receiver: *const QObject, functor: fn());
+        unsafe fn single_shot_raw(msec: i32, receiver: *const QObject, callback_id: u64);
 
     }
 
@@ -62,6 +66,11 @@ mod ffi {
         #[doc(hidden)]
         #[cxx_name = "new_ptr"]
         unsafe fn new_timer_with_parent(parent: *mut QObject) -> *mut QTimer;
+    }
+
+    #[namespace = "rust::cxxqtlib1"]
+    extern "Rust" {
+        fn single_shot_trampoline(callback_id: u64);
     }
 }
 
@@ -78,18 +87,23 @@ impl ffi::QTimer {
 
     pub fn single_shot<F>(msec: i32, receiver: &QObject, functor: F)
     where
-        F: FnMut() + Send + 'static,
+        F: FnOnce() + Send + 'static,
     {
-        let _ = SINGLE_SHOT.set(Mutex::new(Box::new(functor)));
-        unsafe { ffi::single_shot_raw(msec, receiver, single_shot_trampoline) };
+        let callback_id = NEXT_SINGLE_SHOT_ID.fetch_add(1, Ordering::Relaxed);
+        let map = SINGLE_SHOTS.get_or_init(|| Mutex::new(HashMap::new()));
+        map.lock().unwrap().insert(callback_id, Box::new(functor));
+        unsafe { ffi::single_shot_raw(msec, receiver, callback_id) };
     }
 }
 
-static SINGLE_SHOT: OnceLock<Mutex<Box<dyn FnMut() + Send>>> = OnceLock::new();
+static NEXT_SINGLE_SHOT_ID: AtomicU64 = AtomicU64::new(1);
+static SINGLE_SHOTS: OnceLock<Mutex<HashMap<u64, Box<dyn FnOnce() + Send>>>> = OnceLock::new();
 
-fn single_shot_trampoline() {
-    if let Some(lock) = SINGLE_SHOT.get() {
-        let mut cb = lock.lock().unwrap();
-        (cb)();
+fn single_shot_trampoline(callback_id: u64) {
+    if let Some(lock) = SINGLE_SHOTS.get() {
+        let cb = lock.lock().unwrap().remove(&callback_id);
+        if let Some(cb) = cb {
+            cb();
+        }
     }
 }

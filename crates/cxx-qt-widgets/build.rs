@@ -64,6 +64,7 @@ fn main() {
 
     builder = builder
         .cpp_file("include/qlayout.h")
+        .cpp_file("include/qtimer.h")
         .cpp_file("include/qwidget.h");
 
     println!("cargo::rerun-if-changed=src/assertion_utils.h");
