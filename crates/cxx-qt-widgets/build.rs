@@ -27,6 +27,7 @@ fn main() {
 
     let mut builder = CxxQtBuilder::new()
         .qt_module("Gui")
+        .qt_module("Network")
         .qt_module("Widgets")
         .qt_module("WebEngineCore")
         .qt_module("WebEngineWidgets");
@@ -43,6 +44,7 @@ fn main() {
         "qmainwindow",
         "qmessagebox",
         "qmouseevent",
+        "qnetworkcookie",
         "qpalette",
         "qpixmap",
         "qpushbutton",
