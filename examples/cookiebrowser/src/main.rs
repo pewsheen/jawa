@@ -2,7 +2,7 @@ use std::pin::Pin;
 
 use cxx_qt_lib::{QColor, QUrl};
 use cxx_qt_widgets::{
-    ColorRole, Policy, QApplication, QBoxLayout, QLineEdit, QPalette, QPushButton, QSizePolicy, QSpacerItem, QVBoxLayout, QWebEngineView, QWidget, WidgetPtr, casting::Upcast
+    ColorRole, Policy, QApplication, QBoxLayout, QLineEdit, QPalette, QPushButton, QScrollArea, QSizePolicy, QSpacerItem, QVBoxLayout, QWebEngineView, QWidget, ScrollBarPolicy, WidgetPtr, casting::Upcast
 };
 
 #[cxx_qt::bridge]
@@ -14,6 +14,7 @@ pub mod ffi {
         type QPushButton = cxx_qt_widgets::QPushButton;
         type QWebEngineView = cxx_qt_widgets::QWebEngineView;
         type QLineEdit = cxx_qt_widgets::QLineEdit;
+        type QScrollArea = cxx_qt_widgets::QScrollArea;
         #[qobject]
         type MainWindow;
 
@@ -28,7 +29,7 @@ pub mod ffi {
         fn url_line_edit_raw(self: &MainWindow) -> *mut QLineEdit;
 
         #[cxx_name = "scrollArea"]
-        fn scroll_area_raw(self: &MainWindow) -> *mut QWidget;
+        fn scroll_area_raw(self: &MainWindow) -> *mut QScrollArea;
 
         #[cxx_name = "urlButton"]
         fn url_button_raw(self: &MainWindow) -> *mut QPushButton;
@@ -62,7 +63,7 @@ impl ffi::MainWindow {
         self.url_line_edit_raw().into()
     }
 
-    pub fn scroll_area(&self) -> WidgetPtr<QWidget> {
+    pub fn scroll_area(&self) -> WidgetPtr<QScrollArea> {
         self.scroll_area_raw().into()
     }
 
@@ -105,7 +106,12 @@ fn main() {
     let mut p = QPalette::new();
     p.pin_mut().set_color(w.background_role(), &QColor::from_rgb(0, 0, 0));
     w.pin_mut().set_palette(&p);
-    // w.pin_mut().set_la
+    w.pin_mut().set_layout(&mut vbox_layout);
+
+    let mut scroll_area = window.scroll_area();
+    scroll_area.pin_mut().set_widget(&mut w);
+    scroll_area.pin_mut().set_horizontal_scroll_bar_policy(ScrollBarPolicy::ScrollBarAlwaysOff);
+    scroll_area.pin_mut().set_vertical_scroll_bar_policy(ScrollBarPolicy::ScrollBarAlwaysOn);
 
     window.pin_mut().resize(1024, 768);
     window.pin_mut().show();

@@ -105,15 +105,24 @@ mod ffi {
         SmoothTransformation,
     }
 
+    #[derive(Debug)]
+    #[repr(u32)]
+    enum ScrollBarPolicy {
+        ScrollBarAsNeeded,
+        ScrollBarAlwaysOff,
+        ScrollBarAlwaysOn
+    }
+
     extern "C++" {
         type AlignmentFlag;
         type WindowType;
         type ImageConversionFlag;
         type TransformationMode;
+        type ScrollBarPolicy;
     }
 }
 
-pub use ffi::{AlignmentFlag, ImageConversionFlag, TransformationMode, WindowType};
+pub use ffi::{AlignmentFlag, ImageConversionFlag, TransformationMode, WindowType, ScrollBarPolicy};
 
 /// [`QFlags`] of [`WindowType`].
 pub type WindowFlags = QFlags<WindowType>;

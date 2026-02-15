@@ -13,6 +13,7 @@ mod qmouseevent;
 mod qpalette;
 mod qpixmap;
 mod qpushbutton;
+mod qscrollarea;
 mod qsinglepointevent;
 mod qsizepolicy;
 mod qspaceritem;
@@ -45,12 +46,13 @@ pub use qmouseevent::QMouseEvent;
 pub use qpalette::{ColorRole, QPalette};
 pub use qpixmap::QPixmap;
 pub use qpushbutton::QPushButton;
+pub use qscrollarea::QScrollArea;
 pub use qsinglepointevent::QSinglePointEvent;
 pub use qsizepolicy::{Policy, QSizePolicy};
 pub use qspaceritem::QSpacerItem;
 pub use qt::{
     Alignment, AlignmentFlag, ImageConversionFlag, ImageConversionFlags, TransformationMode,
-    WindowFlags, WindowType,
+    WindowFlags, WindowType, ScrollBarPolicy,
 };
 pub use qtimer::QTimer;
 pub use qvboxlayout::QVBoxLayout;

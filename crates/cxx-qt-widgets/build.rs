@@ -46,6 +46,7 @@ fn main() {
         "qpalette",
         "qpixmap",
         "qpushbutton",
+        "qscrollarea",
         "qsinglepointevent",
         "qsizepolicy",
         "qspaceritem",

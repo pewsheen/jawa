@@ -109,8 +109,7 @@ public:
     }
 
     QLineEdit *urlLineEdit() const { return m_urlLineEdit; }
-    // QScrollArea *scrollArea() const { return m_scrollArea; }
-    QWidget *scrollArea() const { return m_scrollArea; }
+    QScrollArea *scrollArea() const { return m_scrollArea; }
     QPushButton *urlButton() const { return m_urlButton; }
     QPushButton *deleteAllButton() const { return m_deleteAllButton; }
     QPushButton *newButton() const { return m_newButton; }
