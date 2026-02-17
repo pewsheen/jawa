@@ -78,6 +78,9 @@ mod ffi {
 
         #[cxx_name = "setLayout"]
         unsafe fn set_layout_raw(self: Pin<&mut QWidget>, layout: *mut QLayout);
+
+        #[cxx_name = "delete_widget"]
+        unsafe fn delete(item: *mut QWidget);
     }
 
     #[namespace = "rust::cxxqtlib1"]
@@ -115,5 +118,11 @@ impl ffi::QWidget {
     pub fn set_layout<T: Upcast<QLayout> + UniquePtrTarget>(self: Pin<&mut Self>, layout: &mut WidgetPtr<T>) {
         layout.release();
         unsafe { self.set_layout_raw(layout.pin_mut().upcast_pin().get_unchecked_mut()) }
+    }
+
+    pub fn delete(self: Pin<&mut Self>) {
+        unsafe {
+            ffi::delete(self.get_unchecked_mut());
+        }
     }
 }

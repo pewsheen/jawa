@@ -2,9 +2,9 @@ use std::pin::Pin;
 
 use cxx_qt_lib::{QColor, QString, QUrl};
 use cxx_qt_widgets::{
-    ColorRole, Policy, QApplication, QBoxLayout, QLineEdit, QPalette, QPushButton, QScrollArea,
-    QSizePolicy, QSpacerItem, QVBoxLayout, QWebEngineView, QWidget, ScrollBarPolicy, WidgetPtr,
-    casting::Upcast,
+    Policy, QApplication, QBoxLayout, QLineEdit, QList_QNetworkCookie, QPalette,
+    QPushButton, QScrollArea, QSpacerItem, QWebEngineView, QWidget,
+    ScrollBarPolicy, WidgetPtr,
 };
 
 #[cxx_qt::bridge]
@@ -17,6 +17,8 @@ pub mod ffi {
         type QWebEngineView = cxx_qt_widgets::QWebEngineView;
         type QLineEdit = cxx_qt_widgets::QLineEdit;
         type QScrollArea = cxx_qt_widgets::QScrollArea;
+        type QList_QNetworkCookie = cxx_qt_widgets::QList_QNetworkCookie;
+        type QBoxLayout = cxx_qt_widgets::QBoxLayout;
         #[qobject]
         type MainWindow;
 
@@ -44,6 +46,12 @@ pub mod ffi {
 
         #[cxx_name = "webview"]
         fn webview_raw(self: &MainWindow) -> *mut QWebEngineView;
+
+        #[cxx_name = "cookies"]
+        fn cookies_raw(self: &MainWindow) -> *const QList_QNetworkCookie;
+
+        #[cxx_name = "layout"]
+        fn layout_raw(self: &MainWindow) -> *mut QBoxLayout;
     }
 
     #[namespace = "rust::cxxqtlib1"]
@@ -87,6 +95,14 @@ impl ffi::MainWindow {
     pub fn webview(&self) -> WidgetPtr<QWebEngineView> {
         self.webview_raw().into()
     }
+
+    pub fn cookies(&self) -> WidgetPtr<QList_QNetworkCookie> {
+        (self.cookies_raw() as *mut QList_QNetworkCookie).into()
+    }
+
+    pub fn layout(&self) -> WidgetPtr<QBoxLayout> {
+        self.layout_raw().into()
+    }
 }
 
 fn main() {
@@ -96,8 +112,8 @@ fn main() {
     let url = QUrl::from("https://www.qt.io");
     window.url_line_edit().pin_mut().set_text(&url.to_qstring());
 
-    let mut vbox_layout = QVBoxLayout::new();
-    let mut layout: Pin<&mut QBoxLayout> = vbox_layout.pin_mut().upcast_pin();
+    let mut vbox_layout = window.layout();
+    let mut layout: Pin<&mut QBoxLayout> = vbox_layout.pin_mut();
     layout.as_mut().add_item(&mut QSpacerItem::new(
         0,
         0,
@@ -128,18 +144,34 @@ fn main() {
         .url_button()
         .pin_mut()
         .on_clicked(move |_, _| {
-            let url =
-                QUrl::from_user_input(&win.url_line_edit().text(), &QString::from(""));
+            let url = QUrl::from_user_input(&win.url_line_edit().text(), &QString::from(""));
             win.webview().pin_mut().load(&url);
         })
         .release();
 
-    // connect(m_deleteAllButton, &QPushButton::clicked, this, &MainWindow::handleDeleteAllClicked);
+    let win: WidgetPtr<ffi::MainWindow> = window.as_mut_ptr().into();
+    window
+        .delete_all_button()
+        .pin_mut()
+        .on_clicked(move |_, _| {
+            let mut store = win.webview().page().profile().pin_mut().cookie_store();
+            store.pin_mut().delete_all_cookies();
+            let index = win.layout().count() - 1;
+            for i in index..=0 {
+                win.layout().item_at(i).widget().as_mut().map(|w|w.delete());
+            }
+            win.cookies().pin_mut().clear();
+        })
+        .release();
+
+    // let win: WidgetPtr<ffi::MainWindow> = window.as_mut_ptr().into();
+    // window.new_button().pin_mut().on_clicked(move |_, _| {
+    // }).release();
     // connect(m_newButton, &QPushButton::clicked, this, &MainWindow::handleNewClicked);
 
-    // m_store = m_webview->page()->profile()->cookieStore();
     // connect(m_store, &QWebEngineCookieStore::cookieAdded, this, &MainWindow::handleCookieAdded);
-    // m_store->loadAllCookies();
+    let mut store = window.webview().page().profile().pin_mut().cookie_store();
+    store.pin_mut().load_all_cookies();
     window.webview().pin_mut().load(&url);
 
     window.pin_mut().resize(1024, 768);

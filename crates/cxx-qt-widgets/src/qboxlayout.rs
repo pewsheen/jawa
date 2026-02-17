@@ -57,6 +57,11 @@ mod ffi {
         /// Adds a layout item to the layout.
         #[cxx_name = "addItem"]
         unsafe fn add_item_raw(self: Pin<&mut QBoxLayout>, item: *mut QLayoutItem);
+
+        fn count(self: &QBoxLayout) -> i32;
+
+        #[cxx_name = "itemAt"]
+        unsafe fn item_at_raw(self: &QBoxLayout, index: i32) -> *mut QLayoutItem;
     }
 
     #[repr(i32)]
@@ -150,5 +155,9 @@ impl ffi::QBoxLayout {
         unsafe {
             self.add_item_raw(item.pin_mut().upcast_pin().get_unchecked_mut());
         }
+    }
+
+    pub fn item_at(self: &QBoxLayout, index: i32) -> WidgetPtr<QLayoutItem> {
+        unsafe { self.item_at_raw(index).into() }
     }
 }

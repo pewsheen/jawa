@@ -14,3 +14,7 @@ class RustQWidget : public QWidget {
    explicit RustQWidget(QObject* parent = nullptr)
       : QWidget(qobject_cast<QWidget*>(parent)) {}
 };
+
+inline void delete_widget(QWidget* widget) {
+	delete widget;
+}

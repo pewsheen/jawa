@@ -1,3 +1,5 @@
+use std::pin::Pin;
+
 pub use ffi::QList_QNetworkCookie;
 
 use crate::QNetworkCookie;
@@ -13,32 +15,60 @@ pub mod ffi {
     }
 
     unsafe extern "C++" {
-        #[rust_name = "cxx_clear"]
         fn clear(self: Pin<&mut QList_QNetworkCookie>);
-        #[rust_name = "cxx_contains"]
         fn contains(self: &QList_QNetworkCookie, _: &QNetworkCookie) -> bool;
     }
 
     #[namespace = "rust::cxxqtlib1::qlist"]
     unsafe extern "C++" {
         #[rust_name = "reserve"]
-        fn qlistReserve(self: Pin<&mut QList_QNetworkCookie>, size: isize);
+        fn qlistReserve(_: Pin<&mut QList_QNetworkCookie>, _: isize);
         #[rust_name = "append"]
-        fn qlistAppend(self: Pin<&mut QList_QNetworkCookie>, _: &QNetworkCookie);
+        fn qlistAppend(_: Pin<&mut QList_QNetworkCookie>, _: &QNetworkCookie);
         #[rust_name = "get_unchecked"]
-        fn qlistGetUnchecked(self: &QList_QNetworkCookie, pos: isize) -> &QNetworkCookie;
+        fn qlistGetUnchecked(_: &QList_QNetworkCookie, _: isize) -> &QNetworkCookie;
         #[rust_name = "index_of"]
-        fn qlistIndexOf(self: &QList_QNetworkCookie, _: &QNetworkCookie) -> isize;
+        fn qlistIndexOf(_: &QList_QNetworkCookie, _: &QNetworkCookie) -> isize;
         #[rust_name = "insert"]
-        fn qlistInsert(self: Pin<&mut QList_QNetworkCookie>, _: isize, _: &QNetworkCookie);
+        fn qlistInsert(_: Pin<&mut QList_QNetworkCookie>, _: isize, _: &QNetworkCookie);
         #[rust_name = "remove"]
-        fn qlistRemove(self: Pin<&mut QList_QNetworkCookie>, _: isize);
+        fn qlistRemove(_: Pin<&mut QList_QNetworkCookie>, _: isize);
         #[rust_name = "len"]
-        fn qlistLen(self: &QList_QNetworkCookie) -> isize;
+        fn qlistLen(_: &QList_QNetworkCookie) -> isize;
     }
+
+    impl UniquePtr<QList_QNetworkCookie> {}
 }
 
 impl ffi::QList_QNetworkCookie {
+    pub fn reserve(self: Pin<&mut Self>, size: isize) {
+        ffi::reserve(self, size);
+    }
+
+    pub fn append(self: Pin<&mut Self>, cookie: &QNetworkCookie) {
+        ffi::append(self, cookie);
+    }
+
+    pub fn get_unchecked(self: &Self, pos: isize) -> &QNetworkCookie {
+        ffi::get_unchecked(self, pos)
+    }
+
+    pub fn index_of(self: &Self, cookie: &QNetworkCookie) -> isize {
+        ffi::index_of(self, cookie)
+    }
+
+    pub fn insert(self: Pin<&mut Self>, pos: isize, cookie: &QNetworkCookie) {
+        ffi::insert(self, pos, cookie);
+    }
+
+    pub fn remove(self: Pin<&mut Self>, pos: isize) {
+        ffi::remove(self, pos);
+    }
+
+    pub fn len(self: &Self) -> isize {
+        ffi::len(self)
+    }
+
     pub fn get(&self, pos: isize) -> Option<&QNetworkCookie> {
         if pos < 0 || pos >= self.len() {
             None

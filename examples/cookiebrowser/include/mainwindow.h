@@ -15,6 +15,7 @@
 #include <QVBoxLayout>
 #include <QWebEngineCookieStore>
 #include <QWebEngineProfile>
+#include "cxx-qt-widgets/qlist_QNetworkCookie.h"
 
 QT_BEGIN_NAMESPACE
 class QWebEngineCookieStore;
@@ -104,7 +105,10 @@ class MainWindow : public QMainWindow, public Ui_MainWindow
 {
     Q_OBJECT
 public:
-    explicit MainWindow() {
+    explicit MainWindow()
+        : QMainWindow()
+        , m_layout(new QVBoxLayout)
+    {
         setupUi(this);
     }
 
@@ -114,6 +118,8 @@ public:
     QPushButton *deleteAllButton() const { return m_deleteAllButton; }
     QPushButton *newButton() const { return m_newButton; }
     QWebEngineView *webview() const { return m_webview; }
+    QBoxLayout *layout() const { return m_layout; }
+    const QList_QNetworkCookie *cookies() const { return &m_cookies; }
     
     explicit MainWindow(const QUrl &url)
         : QMainWindow()

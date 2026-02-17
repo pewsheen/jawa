@@ -39,6 +39,7 @@ fn main() {
         "qimage",
         "qlabel",
         "qlineedit",
+        "qlist_qnetworkcookie",
         "qlayout",
         "qlayoutitem",
         "qmainwindow",
@@ -70,6 +71,7 @@ fn main() {
 
     builder = builder
         .cpp_file("include/qlayout.h")
+        .cpp_file("include/qlist_QNetworkCookie.h")
         .cpp_file("include/qtimer.h")
         .cpp_file("include/qwidget.h");
 
