@@ -1,4 +1,4 @@
-# JAWA is Just A Web App
+# cxx-qt-widgets
 
 ### Linux
 
