@@ -3,16 +3,17 @@
 #include <QNetworkCookie>
 
 #include <memory>
+#include "rust/cxx.h"
+#include <cxx-qt-lib/assertion_utils.h>
 
-#include "cxx-qt-lib/qbytearray.h"
+assert_alignment_and_size(QNetworkCookie, {
+  ::std::size_t a1;
+});
 
-inline std::unique_ptr<QNetworkCookie> qnetworkcookieNew()
-{
-  return std::make_unique<QNetworkCookie>();
-}
+namespace rust {
 
-inline std::unique_ptr<QNetworkCookie> qnetworkcookieNewWithNameValue(const QByteArray& name,
-                                                                       const QByteArray& value)
-{
-  return std::make_unique<QNetworkCookie>(name, value);
-}
+template<>
+struct IsRelocatable<QNetworkCookie> : ::std::true_type
+{};
+
+} // namespace rust

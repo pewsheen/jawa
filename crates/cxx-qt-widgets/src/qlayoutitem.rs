@@ -1,5 +1,3 @@
-use std::pin::Pin;
-
 pub use ffi::QLayoutItem;
 
 use crate::WidgetPtr;

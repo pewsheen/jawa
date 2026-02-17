@@ -1,8 +1,8 @@
-use cxx::UniquePtr;
+use std::mem::MaybeUninit;
 
-pub use ffi::QNetworkCookie;
+use cxx::{ExternType, type_id};
 
-#[cxx_qt::bridge]
+#[cxx::bridge]
 mod ffi {
     unsafe extern "C++" {
         include!("cxx-qt-lib/qbytearray.h");
@@ -15,7 +15,7 @@ mod ffi {
         include!("cxx-qt-widgets/qnetworkcookie.h");
 
         /// Represents an HTTP cookie.
-        type QNetworkCookie;
+        type QNetworkCookie = super::QNetworkCookie;
 
         /// Returns whether the cookie has the Secure attribute.
         #[cxx_name = "isSecure"]
@@ -69,34 +69,17 @@ mod ffi {
         #[cxx_name = "hasSameIdentifier"]
         fn has_same_identifier(self: &QNetworkCookie, other: &QNetworkCookie) -> bool;
     }
-
-    unsafe extern "C++" {
-        include!("cxx-qt-widgets/qnetworkcookie.h");
-
-        #[doc(hidden)]
-        #[cxx_name = "qnetworkcookieNew"]
-        fn new_qnetworkcookie() -> UniquePtr<QNetworkCookie>;
-
-        #[doc(hidden)]
-        #[cxx_name = "qnetworkcookieNewWithNameValue"]
-        fn new_qnetworkcookie_with_name_value(
-            name: &QByteArray,
-            value: &QByteArray,
-        ) -> UniquePtr<QNetworkCookie>;
-    }
+}
+#[derive(Clone, Debug)]
+#[repr(C)]
+pub struct QNetworkCookie {
+    _a1: MaybeUninit<usize>,
 }
 
-impl ffi::QNetworkCookie {
-    /// Creates a new empty cookie.
-    pub fn new() -> UniquePtr<Self> {
-        ffi::new_qnetworkcookie()
-    }
-
-    /// Creates a new cookie with a name and value.
-    pub fn new_with_name_value(
-        name: &cxx_qt_lib::QByteArray,
-        value: &cxx_qt_lib::QByteArray,
-    ) -> UniquePtr<Self> {
-        ffi::new_qnetworkcookie_with_name_value(name, value)
-    }
+// Safety:
+//
+// Static checks on the C++ side to ensure the size is the same.
+unsafe impl ExternType for QNetworkCookie {
+    type Id = type_id!("QNetworkCookie");
+    type Kind = cxx::kind::Trivial;
 }

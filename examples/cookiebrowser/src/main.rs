@@ -19,6 +19,7 @@ pub mod ffi {
         type QScrollArea = cxx_qt_widgets::QScrollArea;
         type QList_QNetworkCookie = cxx_qt_widgets::QList_QNetworkCookie;
         type QBoxLayout = cxx_qt_widgets::QBoxLayout;
+        type QNetworkCookie = cxx_qt_widgets::QNetworkCookie;
         #[qobject]
         type MainWindow;
 
@@ -61,6 +62,22 @@ pub mod ffi {
         #[doc(hidden)]
         #[cxx_name = "make_unique"]
         fn new_main_window() -> UniquePtr<MainWindow>;
+    }
+
+    unsafe extern "C++Qt" {
+        #[qobject]
+        type CookieDialog;
+
+        fn cookie(self: Pin<&mut CookieDialog>) -> QNetworkCookie;
+    }
+
+    #[namespace = "rust::cxxqtlib1"]
+    unsafe extern "C++Qt" {
+        include!("cxx-qt-lib/common.h");
+
+        #[doc(hidden)]
+        #[cxx_name = "make_unique"]
+        fn new_cookie_dialog() -> UniquePtr<CookieDialog>;
     }
 }
 
@@ -166,7 +183,7 @@ fn main() {
 
     // let win: WidgetPtr<ffi::MainWindow> = window.as_mut_ptr().into();
     // window.new_button().pin_mut().on_clicked(move |_, _| {
-    // }).release();
+    // }).release(); TODO!!!!!
     // connect(m_newButton, &QPushButton::clicked, this, &MainWindow::handleNewClicked);
 
     // connect(m_store, &QWebEngineCookieStore::cookieAdded, this, &MainWindow::handleCookieAdded);

@@ -15,6 +15,7 @@
 #include <QVBoxLayout>
 #include <QWebEngineCookieStore>
 #include <QWebEngineProfile>
+#include "cxx-qt-widgets/qnetworkcookie.h"
 #include "cxx-qt-widgets/qlist_QNetworkCookie.h"
 
 QT_BEGIN_NAMESPACE
@@ -25,8 +26,8 @@ class CookieDialog : public QDialog, public Ui_CookieDialog
 {
     Q_OBJECT
 public:
-    CookieDialog(const QNetworkCookie &cookie, QWidget *parent = nullptr)
-        : QDialog(parent)
+    CookieDialog(const QNetworkCookie &cookie)
+        : QDialog()
     {
         setupUi(this);
         m_nameLineEdit->setText(cookie.name());
@@ -40,8 +41,8 @@ public:
         m_cancelButton->setText(tr("Close"));
     }
 
-    CookieDialog(QWidget *parent = 0)
-        : QDialog(parent)
+    CookieDialog()
+        : QDialog()
     {
         setupUi(this);
         m_nameLineEdit->setReadOnly(false);
